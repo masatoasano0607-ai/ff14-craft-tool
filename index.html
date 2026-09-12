@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>FF14 製作素材ツール</title>
 
 <style>
@@ -20,19 +21,33 @@
   --blue:#77a8df;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html,body{
+html,
+body{
   margin:0;
   min-height:100%;
   background:var(--bg);
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic","Meiryo",sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Yu Gothic",
+    "Meiryo",
+    sans-serif;
 }
 
-body{min-height:100vh}
+body{
+  min-height:100vh;
+}
 
-button,input{font:inherit}
+button,
+input{
+  font:inherit;
+}
 
 button{
   border:0;
@@ -44,8 +59,14 @@ button{
   color:#1b150b;
 }
 
-button:hover{filter:brightness(1.08)}
-button:disabled{opacity:.45;cursor:default}
+button:hover{
+  filter:brightness(1.08);
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:default;
+}
 
 button.secondary{
   color:var(--text);
@@ -70,6 +91,11 @@ input:focus{
   outline:2px solid rgba(223,178,95,.28);
   border-color:var(--gold);
 }
+
+
+/* =========================
+   全体
+========================= */
 
 .app{
   min-height:100vh;
@@ -111,8 +137,18 @@ input:focus{
   min-height:18px;
 }
 
-.status.ok{color:var(--green)}
-.status.error{color:var(--red)}
+.status.ok{
+  color:var(--green);
+}
+
+.status.error{
+  color:var(--red);
+}
+
+
+/* =========================
+   検索候補
+========================= */
 
 .candidates{
   margin-top:7px;
@@ -134,13 +170,20 @@ input:focus{
   background:#273343;
 }
 
-.item-name{font-weight:700}
+.item-name{
+  font-weight:700;
+}
 
 .small{
   color:var(--sub);
   font-size:11px;
   margin-top:3px;
 }
+
+
+/* =========================
+   選択中
+========================= */
 
 .selected{
   display:none;
@@ -153,12 +196,11 @@ input:focus{
   display:flex;
   align-items:center;
   gap:8px;
-  flex-wrap:wrap;
 }
 
 .selected-info{
   flex:1;
-  min-width:180px;
+  min-width:0;
 }
 
 .qty-wrap{
@@ -170,12 +212,18 @@ input:focus{
 .qty-label{
   color:var(--sub);
   font-size:11px;
+  white-space:nowrap;
 }
 
 #qtyInput{
   width:90px;
   text-align:center;
 }
+
+
+/* =========================
+   メイン
+========================= */
 
 .workspace{
   flex:1;
@@ -192,13 +240,13 @@ input:focus{
   border-right:1px solid var(--line);
   padding:14px;
   overflow-y:auto;
-  height:calc(100vh - 160px);
+  height:calc(100vh - 150px);
 }
 
 .main{
   min-width:0;
   padding:14px;
-  height:calc(100vh - 160px);
+  height:calc(100vh - 150px);
   overflow:hidden;
 }
 
@@ -233,7 +281,13 @@ input:focus{
   font-size:13px;
 }
 
-.target-card,.craft-card{
+
+/* =========================
+   製作カード
+========================= */
+
+.target-card,
+.craft-card{
   background:var(--panel2);
   border:1px solid var(--line);
   border-radius:9px;
@@ -270,7 +324,7 @@ input:focus{
 }
 
 .checkbox-row{
-  grid-column:1/-1;
+  grid-column:1 / -1;
   display:flex;
   align-items:center;
   gap:7px;
@@ -278,7 +332,14 @@ input:focus{
   cursor:pointer;
 }
 
-.checkbox-row input{width:auto}
+.checkbox-row input{
+  width:auto;
+}
+
+
+/* =========================
+   最終素材
+========================= */
 
 .material-grid{
   display:grid;
@@ -301,7 +362,9 @@ input:focus{
   text-align:right;
 }
 
-.number{text-align:right}
+.number{
+  text-align:right;
+}
 
 .required{
   color:var(--gold);
@@ -317,6 +380,11 @@ input:focus{
   color:var(--green);
   font-weight:700;
 }
+
+
+/* =========================
+   ツリー
+========================= */
 
 .tree-panel{
   height:100%;
@@ -376,10 +444,21 @@ input:focus{
   border:2px solid var(--gold);
 }
 
-.tree-card.leaf{background:#18212b}
-.tree-card.stopped{border-color:#d39e4e}
-.tree-card.covered{border-color:#5caf78}
-.tree-card.shared{border-color:var(--blue)}
+.tree-card.leaf{
+  background:#18212b;
+}
+
+.tree-card.stopped{
+  border-color:#d39e4e;
+}
+
+.tree-card.covered{
+  border-color:#5caf78;
+}
+
+.tree-card.shared{
+  border-color:var(--blue);
+}
 
 .tree-name{
   font-size:13px;
@@ -401,8 +480,13 @@ input:focus{
   line-height:1.4;
 }
 
-.tree-good{color:var(--green)}
-.tree-shared{color:#8fc1f3}
+.tree-good{
+  color:var(--green);
+}
+
+.tree-shared{
+  color:#8fc1f3;
+}
 
 .tree-children{
   display:flex;
@@ -411,7 +495,9 @@ input:focus{
   position:relative;
 }
 
-.tree-child{position:relative}
+.tree-child{
+  position:relative;
+}
 
 .tree-child::before{
   content:"";
@@ -431,9 +517,24 @@ input:focus{
   border-left:1px solid var(--line2);
 }
 
+
+/* =========================
+   スマホ
+========================= */
+
 @media(max-width:800px){
-  .header{padding:10px}
-  .title{font-size:18px}
+
+  .header{
+    padding:10px;
+  }
+
+  .title{
+    font-size:18px;
+  }
+
+  .selected-row{
+    flex-wrap:wrap;
+  }
 
   .selected-info{
     flex-basis:100%;
@@ -448,7 +549,9 @@ input:focus{
     width:auto;
   }
 
-  .workspace{display:block}
+  .workspace{
+    display:block;
+  }
 
   .sidebar{
     height:auto;
@@ -464,7 +567,9 @@ input:focus{
     overflow:visible;
   }
 
-  .tree-panel{height:auto}
+  .tree-panel{
+    height:auto;
+  }
 
   .tree-scroll{
     overflow-x:hidden;
@@ -489,9 +594,13 @@ input:focus{
     border-left:1px solid var(--line2);
   }
 
-  .tree-children::before{display:none}
+  .tree-children::before{
+    display:none;
+  }
 
-  .tree-child{margin-top:8px}
+  .tree-child{
+    margin-top:8px;
+  }
 
   .tree-child::before{
     left:-14px;
@@ -499,11 +608,8 @@ input:focus{
     top:23px;
   }
 
-  .tree-toolbar-info{display:none}
-
-  button.danger{
-    width:100%;
-    margin-top:2px;
+  .tree-toolbar-info{
+    display:none;
   }
 }
 </style>
@@ -514,82 +620,121 @@ input:focus{
 <div class="app">
 
 <header class="header">
-<div class="header-inner">
+  <div class="header-inner">
 
-  <div class="title">FF14 製作素材ツール</div>
+    <div class="title">
+      FF14 製作素材ツール
+    </div>
 
-  <div class="search-row">
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="作りたいアイテム名"
-      autocomplete="off"
-    >
-    <button id="searchButton">検索</button>
-  </div>
+    <div class="search-row">
 
-  <div id="status" class="status">
-    アイテム名を2文字以上入力してください
-  </div>
-
-  <div id="candidates" class="candidates"></div>
-
-  <div id="selected" class="selected">
-    <div class="selected-row">
-
-      <div class="selected-info">
-        <div id="selectedName" class="item-name"></div>
-        <div id="selectedDetail" class="small"></div>
-      </div>
-
-      <div class="qty-wrap">
-        <span class="qty-label">作る個数</span>
-        <input
-          id="qtyInput"
-          type="number"
-          min="1"
-          inputmode="numeric"
-          value="1"
-        >
-      </div>
-
-      <button id="calculateButton">計算</button>
-
-      <button
-        id="clearButton"
-        class="secondary"
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="作りたいアイテム名（ひらがなでもOK）"
+        autocomplete="off"
       >
-        解除
-      </button>
 
-      <button
-        id="resetOwnedButton"
-        class="danger"
-      >
-        所持数をすべて0
+      <button id="searchButton">
+        検索
       </button>
 
     </div>
-  </div>
 
-</div>
+    <div id="status" class="status">
+      アイテム名を2文字以上入力してください
+    </div>
+
+    <div
+      id="candidates"
+      class="candidates"
+    ></div>
+
+    <div
+      id="selected"
+      class="selected"
+    >
+
+      <div class="selected-row">
+
+        <div class="selected-info">
+
+          <div
+            id="selectedName"
+            class="item-name"
+          ></div>
+
+          <div
+            id="selectedDetail"
+            class="small"
+          ></div>
+
+        </div>
+
+        <div class="qty-wrap">
+
+          <span class="qty-label">
+            作る個数
+          </span>
+
+          <input
+            id="qtyInput"
+            type="number"
+            min="1"
+            inputmode="numeric"
+            value="1"
+            title="作りたい個数"
+          >
+
+        </div>
+
+        <button id="calculateButton">
+          計算
+        </button>
+
+        <button
+          id="resetOwnedButton"
+          class="danger"
+        >
+          所持数をすべて0
+        </button>
+
+        <button
+          id="clearButton"
+          class="secondary"
+        >
+          解除
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 </header>
 
 
 <div class="workspace">
 
-  <aside id="sidebar" class="sidebar">
+  <aside
+    id="sidebar"
+    class="sidebar"
+  >
+
     <div class="empty">
       アイテムを検索して<br>
       製作素材を計算してください
     </div>
+
   </aside>
+
 
   <main class="main">
 
     <div class="tree-panel">
 
       <div class="tree-toolbar">
+
         <div class="tree-toolbar-title">
           素材ツリー
         </div>
@@ -597,12 +742,18 @@ input:focus{
         <div class="tree-toolbar-info">
           PC：左 → 右　／　スマホ：上 → 下
         </div>
+
       </div>
 
-      <div id="treeScroll" class="tree-scroll">
+      <div
+        id="treeScroll"
+        class="tree-scroll"
+      >
+
         <div class="empty">
           ここに素材ツリーが表示されます
         </div>
+
       </div>
 
     </div>
@@ -619,37 +770,91 @@ input:focus{
 
 "use strict";
 
-const API = "https://v2.xivapi.com/api";
+const API =
+  "https://v2.xivapi.com/api";
 
-const searchInput = document.getElementById("searchInput");
-const searchButton = document.getElementById("searchButton");
-const status = document.getElementById("status");
-const candidates = document.getElementById("candidates");
 
-const selectedBox = document.getElementById("selected");
-const selectedName = document.getElementById("selectedName");
-const selectedDetail = document.getElementById("selectedDetail");
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
 
-const qtyInput = document.getElementById("qtyInput");
-const calculateButton = document.getElementById("calculateButton");
-const clearButton = document.getElementById("clearButton");
-const resetOwnedButton = document.getElementById("resetOwnedButton");
+const searchButton =
+  document.getElementById(
+    "searchButton"
+  );
 
-const sidebar = document.getElementById("sidebar");
-const treeScroll = document.getElementById("treeScroll");
+const status =
+  document.getElementById(
+    "status"
+  );
+
+const candidates =
+  document.getElementById(
+    "candidates"
+  );
+
+const selectedBox =
+  document.getElementById(
+    "selected"
+  );
+
+const selectedName =
+  document.getElementById(
+    "selectedName"
+  );
+
+const selectedDetail =
+  document.getElementById(
+    "selectedDetail"
+  );
+
+const qtyInput =
+  document.getElementById(
+    "qtyInput"
+  );
+
+const calculateButton =
+  document.getElementById(
+    "calculateButton"
+  );
+
+const resetOwnedButton =
+  document.getElementById(
+    "resetOwnedButton"
+  );
+
+const clearButton =
+  document.getElementById(
+    "clearButton"
+  );
+
+const sidebar =
+  document.getElementById(
+    "sidebar"
+  );
+
+const treeScroll =
+  document.getElementById(
+    "treeScroll"
+  );
+
 
 let selectedItem = null;
+
 let searchTimer = null;
 
-const recipeCache = new Map();
+const recipeCache =
+  new Map();
 
 const owned = {};
+
 const craftMode = {};
 
 
-/* ===============================
+/* ========================================
    保存
-=============================== */
+======================================== */
 
 function loadSettings(){
 
@@ -658,19 +863,28 @@ function loadSettings(){
     Object.assign(
       owned,
       JSON.parse(
-        localStorage.getItem("ff14_owned_v5") || "{}"
+        localStorage.getItem(
+          "ff14_owned_v5"
+        ) || "{}"
       )
     );
 
     Object.assign(
       craftMode,
       JSON.parse(
-        localStorage.getItem("ff14_craftmode_v5") || "{}"
+        localStorage.getItem(
+          "ff14_craftmode_v5"
+        ) || "{}"
       )
     );
 
   }catch(error){
-    console.warn("設定読み込み失敗",error);
+
+    console.warn(
+      "設定読み込み失敗",
+      error
+    );
+
   }
 
 }
@@ -682,16 +896,25 @@ function saveSettings(){
 
     localStorage.setItem(
       "ff14_owned_v5",
-      JSON.stringify(owned)
+      JSON.stringify(
+        owned
+      )
     );
 
     localStorage.setItem(
       "ff14_craftmode_v5",
-      JSON.stringify(craftMode)
+      JSON.stringify(
+        craftMode
+      )
     );
 
   }catch(error){
-    console.warn("設定保存失敗",error);
+
+    console.warn(
+      "設定保存失敗",
+      error
+    );
+
   }
 
 }
@@ -699,13 +922,15 @@ function saveSettings(){
 loadSettings();
 
 
-/* ===============================
+/* ========================================
    共通
-=============================== */
+======================================== */
 
 function escapeHTML(value){
 
-  return String(value ?? "").replace(
+  return String(
+    value ?? ""
+  ).replace(
     /[&<>"']/g,
     character => ({
       "&":"&amp;",
@@ -722,8 +947,40 @@ function escapeHTML(value){
 function escapeQuery(value){
 
   return String(value)
-    .replace(/\\/g,"\\\\")
-    .replace(/"/g,'\\"');
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    );
+
+}
+
+
+/*
+  ひらがな → カタカナ
+
+  例
+  こばるとくろー
+      ↓
+  コバルトクロー
+*/
+function hiraganaToKatakana(
+  value
+){
+
+  return String(value)
+    .replace(
+      /[\u3041-\u3096]/g,
+      character =>
+        String.fromCharCode(
+          character.charCodeAt(0)
+          +
+          0x60
+        )
+    );
 
 }
 
@@ -731,7 +988,8 @@ function escapeQuery(value){
 function itemKey(item){
 
   return String(
-    item.id || item.name
+    item.id ||
+    item.name
   );
 
 }
@@ -743,7 +1001,9 @@ function ownedQty(item){
     0,
     Math.floor(
       Number(
-        owned[itemKey(item)] || 0
+        owned[
+          itemKey(item)
+        ] || 0
       )
     )
   );
@@ -753,10 +1013,16 @@ function ownedQty(item){
 
 function shouldCraft(item){
 
-  const key = itemKey(item);
+  const key =
+    itemKey(item);
 
-  if(craftMode[key] === undefined){
+  if(
+    craftMode[key]
+    === undefined
+  ){
+
     return true;
+
   }
 
   return Boolean(
@@ -766,9 +1032,13 @@ function shouldCraft(item){
 }
 
 
-function setStatus(text,type=""){
+function setStatus(
+  text,
+  type=""
+){
 
-  status.textContent = text;
+  status.textContent =
+    text;
 
   status.className =
     "status" +
@@ -781,19 +1051,25 @@ function setStatus(text,type=""){
 }
 
 
-/* ===============================
+/* ========================================
    XIVAPI
-=============================== */
+======================================== */
 
-async function api(path,params={}){
+async function api(
+  path,
+  params={}
+){
 
-  const url = new URL(
-    API + path
-  );
+  const url =
+    new URL(
+      API + path
+    );
 
   for(
     const [key,value]
-    of Object.entries(params)
+    of Object.entries(
+      params
+    )
   ){
 
     if(
@@ -816,7 +1092,9 @@ async function api(path,params={}){
       url.toString()
     );
 
-  if(!response.ok){
+  if(
+    !response.ok
+  ){
 
     throw new Error(
       "XIVAPI HTTP " +
@@ -830,18 +1108,22 @@ async function api(path,params={}){
 }
 
 
-/* ===============================
-   検索
-=============================== */
+/* ========================================
+   アイテム検索
+======================================== */
 
 async function searchItems(){
 
-  const word =
-    searchInput.value.trim();
+  const originalWord =
+    searchInput.value
+      .trim();
 
-  if(word.length < 2){
+  if(
+    originalWord.length < 2
+  ){
 
-    candidates.innerHTML = "";
+    candidates.innerHTML =
+      "";
 
     setStatus(
       "アイテム名を2文字以上入力してください"
@@ -851,9 +1133,29 @@ async function searchItems(){
 
   }
 
-  setStatus("検索中…");
 
-  candidates.innerHTML = "";
+  /*
+    検索時だけひらがなを
+    カタカナへ変換する。
+
+    検索欄に入力した文字自体は
+    書き換えない。
+  */
+  const word =
+    hiraganaToKatakana(
+      originalWord
+    );
+
+
+  setStatus(
+    originalWord === word
+      ? "検索中…"
+      : `「${word}」として検索中…`
+  );
+
+  candidates.innerHTML =
+    "";
+
 
   try{
 
@@ -861,24 +1163,43 @@ async function searchItems(){
       await api(
         "/search",
         {
-          sheets:"Item",
-          fields:"Name",
-          language:"ja",
-          limit:20,
+
+          sheets:
+            "Item",
+
+          fields:
+            "Name",
+
+          language:
+            "ja",
+
+          limit:
+            20,
+
           query:
-            `Name~"${escapeQuery(word)}"`
+            `Name~"${escapeQuery(
+              word
+            )}"`
+
         }
       );
 
+
     const items =
-      (data.results || [])
+      (
+        data.results || []
+      )
       .map(
         row => ({
-          id:Number(
-            row.row_id || 0
-          ),
+
+          id:
+            Number(
+              row.row_id || 0
+            ),
+
           name:
             row.fields?.Name || ""
+
         })
       )
       .filter(
@@ -887,7 +1208,10 @@ async function searchItems(){
           item.name
       );
 
-    if(!items.length){
+
+    if(
+      !items.length
+    ){
 
       setStatus(
         "該当するアイテムが見つかりませんでした"
@@ -897,9 +1221,11 @@ async function searchItems(){
 
     }
 
+
     setStatus(
       `${items.length}件見つかりました`
     );
+
 
     candidates.innerHTML =
       items.map(
@@ -911,7 +1237,9 @@ async function searchItems(){
           >
 
             <div class="item-name">
-              ${escapeHTML(item.name)}
+              ${escapeHTML(
+                item.name
+              )}
             </div>
 
             <div class="small">
@@ -923,32 +1251,42 @@ async function searchItems(){
         `
       ).join("");
 
+
     candidates
-      .querySelectorAll(".candidate")
+      .querySelectorAll(
+        ".candidate"
+      )
       .forEach(
         element => {
 
-          element.addEventListener(
-            "click",
-            () => {
+          element
+            .addEventListener(
+              "click",
+              () => {
 
-              chooseItem(
-                items[
+                const index =
                   Number(
-                    element.dataset.index
-                  )
-                ]
-              );
+                    element
+                      .dataset
+                      .index
+                  );
 
-            }
-          );
+                chooseItem(
+                  items[index]
+                );
+
+              }
+            );
 
         }
       );
 
+
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     setStatus(
       "検索エラー：" +
@@ -961,18 +1299,22 @@ async function searchItems(){
 }
 
 
-/* ===============================
+/* ========================================
    アイテム選択
-=============================== */
+======================================== */
 
-async function chooseItem(item){
+async function chooseItem(
+  item
+){
 
-  selectedItem = item;
+  selectedItem =
+    item;
 
   searchInput.value =
     item.name;
 
-  candidates.innerHTML = "";
+  candidates.innerHTML =
+    "";
 
   selectedName.textContent =
     item.name;
@@ -987,6 +1329,7 @@ async function chooseItem(item){
     "レシピを確認しています…"
   );
 
+
   try{
 
     const recipes =
@@ -994,7 +1337,9 @@ async function chooseItem(item){
         item.name
       );
 
-    if(recipes.length){
+    if(
+      recipes.length
+    ){
 
       const recipe =
         recipes[0];
@@ -1026,7 +1371,9 @@ async function chooseItem(item){
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     selectedDetail.textContent =
       "レシピ確認失敗";
@@ -1041,24 +1388,31 @@ async function chooseItem(item){
 }
 
 
-/* ===============================
+/* ========================================
    XIVAPI relationship
-=============================== */
+======================================== */
 
-function relationFields(value){
+function relationFields(
+  value
+){
 
   if(
     !value ||
     typeof value !== "object"
   ){
+
     return {};
+
   }
 
   if(
     value.fields &&
-    typeof value.fields === "object"
+    typeof value.fields
+      === "object"
   ){
+
     return value.fields;
+
   }
 
   return value;
@@ -1066,13 +1420,17 @@ function relationFields(value){
 }
 
 
-function relationId(value){
+function relationId(
+  value
+){
 
   if(
     !value ||
     typeof value !== "object"
   ){
+
     return 0;
+
   }
 
   return Number(
@@ -1086,13 +1444,17 @@ function relationId(value){
 }
 
 
-/* ===============================
+/* ========================================
    レシピ取得
-=============================== */
+======================================== */
 
-async function getRecipes(name){
+async function getRecipes(
+  name
+){
 
-  if(recipeCache.has(name)){
+  if(
+    recipeCache.has(name)
+  ){
 
     return recipeCache.get(
       name
@@ -1100,64 +1462,99 @@ async function getRecipes(name){
 
   }
 
+
   const fields = [
+
     "ItemResult.Name",
+
     "AmountResult",
+
     "AmountIngredient",
+
     "Ingredient[].Name",
+
     "CraftType.Name",
+
     "RecipeLevelTable.ClassJobLevel",
+
     "IsSecondary"
+
   ].join(",");
+
 
   const data =
     await api(
       "/search",
       {
-        sheets:"Recipe",
+
+        sheets:
+          "Recipe",
+
         fields,
-        language:"ja",
-        limit:30,
+
+        language:
+          "ja",
+
+        limit:
+          30,
+
         query:
-          `ItemResult.Name="${escapeQuery(name)}"`
+          `ItemResult.Name="${escapeQuery(
+            name
+          )}"`
+
       }
     );
 
+
   const recipes =
-    (data.results || [])
+    (
+      data.results || []
+    )
     .map(
       row => {
 
-        const f =
+        const fields =
           row.fields || {};
 
         const result =
           relationFields(
-            f.ItemResult
+            fields.ItemResult
           );
 
         const craft =
           relationFields(
-            f.CraftType
+            fields.CraftType
           );
 
         const level =
           relationFields(
-            f.RecipeLevelTable
+            fields.RecipeLevelTable
           );
 
+
+        /*
+          同じレシピ内に
+          同じ素材が複数回入っていたら
+          ここで合算する。
+        */
         const ingredientMap =
           new Map();
 
+
         const ingredients =
           Array.isArray(
-            f.Ingredient
+            fields.Ingredient
           )
-          ? f.Ingredient
+          ? fields.Ingredient
           : [];
 
+
         ingredients.forEach(
-          (ingredient,index) => {
+          (
+            ingredient,
+            index
+          ) => {
 
             const ingredientFields =
               relationFields(
@@ -1170,35 +1567,47 @@ async function getRecipes(name){
               );
 
             const ingredientName =
-              ingredientFields.Name || "";
+              ingredientFields.Name ||
+              "";
 
             const amount =
               Number(
                 Array.isArray(
-                  f.AmountIngredient
+                  fields.AmountIngredient
                 )
-                ? f.AmountIngredient[index] || 0
+                ? fields
+                    .AmountIngredient[
+                      index
+                    ] || 0
                 : 0
               );
+
 
             if(
               !id ||
               !ingredientName ||
               amount <= 0
             ){
+
               return;
+
             }
+
 
             const key =
               String(id);
 
+
             if(
-              ingredientMap.has(key)
+              ingredientMap.has(
+                key
+              )
             ){
 
               ingredientMap
                 .get(key)
-                .amount += amount;
+                .amount +=
+                  amount;
 
             }else{
 
@@ -1206,7 +1615,8 @@ async function getRecipes(name){
                 key,
                 {
                   id,
-                  name:ingredientName,
+                  name:
+                    ingredientName,
                   amount
                 }
               );
@@ -1215,6 +1625,7 @@ async function getRecipes(name){
 
           }
         );
+
 
         return {
 
@@ -1230,25 +1641,32 @@ async function getRecipes(name){
             Math.max(
               1,
               Number(
-                f.AmountResult || 1
+                fields.AmountResult ||
+                1
               )
             ),
 
           craft:
-            craft.Name || "製作",
+            craft.Name ||
+            "製作",
 
           level:
             Number(
-              level.ClassJobLevel || 0
+              level
+                .ClassJobLevel ||
+              0
             ),
 
           secondary:
             Boolean(
-              f.IsSecondary
+              fields.IsSecondary
             ),
 
           ingredients:
-            [...ingredientMap.values()]
+            [
+              ...ingredientMap
+                .values()
+            ]
 
         };
 
@@ -1256,25 +1674,35 @@ async function getRecipes(name){
     )
     .filter(
       recipe =>
-        recipe.resultName === name &&
+        recipe.resultName
+          === name
+        &&
         recipe.ingredients.length
     );
+
 
   recipes.sort(
     (a,b) =>
 
-      Number(a.secondary)
+      Number(
+        a.secondary
+      )
       -
-      Number(b.secondary)
+      Number(
+        b.secondary
+      )
 
       ||
 
-      a.level - b.level
+      a.level -
+      b.level
 
       ||
 
-      a.id - b.id
+      a.id -
+      b.id
   );
+
 
   recipeCache.set(
     name,
@@ -1286,9 +1714,9 @@ async function getRecipes(name){
 }
 
 
-/* ===============================
+/* ========================================
    集計
-=============================== */
+======================================== */
 
 function addFinal(
   context,
@@ -1302,32 +1730,54 @@ function addFinal(
   const key =
     itemKey(item);
 
+
   if(
-    !context.finals.has(key)
+    !context.finals.has(
+      key
+    )
   ){
 
     context.finals.set(
       key,
       {
+
         item,
+
         required:0,
+
         used:0,
+
         shortage:0,
+
         stopped:false
+
       }
     );
 
   }
 
+
   const entry =
-    context.finals.get(key);
+    context.finals.get(
+      key
+    );
 
-  entry.required += required;
-  entry.used += used;
-  entry.shortage += shortage;
+  entry.required +=
+    required;
 
-  if(stopped){
-    entry.stopped = true;
+  entry.used +=
+    used;
+
+  entry.shortage +=
+    shortage;
+
+  if(
+    stopped
+  ){
+
+    entry.stopped =
+      true;
+
   }
 
 }
@@ -1349,21 +1799,31 @@ function addCraft(
   context.crafts.set(
     key,
     {
+
       item,
+
       recipe,
+
       required,
+
       used,
+
       shortage,
+
       runs
+
     }
   );
 
 }
 
 
-/* ===============================
-   グラフ作成
-=============================== */
+/* ========================================
+   レシピグラフ作成
+
+   同じアイテムは
+   1ノードだけ作る。
+======================================== */
 
 async function buildGraph(
   item,
@@ -1376,28 +1836,46 @@ async function buildGraph(
   const key =
     itemKey(item);
 
+
   if(
     graph.has(key)
   ){
+
     return key;
+
   }
 
+
   const node = {
+
     item,
+
     recipe:null,
-    children:[]
+
+    children:[],
+
+    cycle:false
+
   };
+
 
   graph.set(
     key,
     node
   );
 
-  if(depth > 25){
+
+  if(
+    depth > 25
+  ){
+
     return key;
+
   }
 
+
   let recipes = [];
+
 
   try{
 
@@ -1418,46 +1896,88 @@ async function buildGraph(
 
   }
 
-  node.recipe =
-    recipes[0] || null;
 
-  if(!node.recipe){
-    return key;
-  }
+  node.recipe =
+    recipes[0] ||
+    null;
+
 
   if(
-    !isRoot &&
-    !shouldCraft(item)
+    !node.recipe
   ){
+
     return key;
+
   }
 
-  const nextPath =
-    new Set(path);
 
-  nextPath.add(key);
+  /*
+    完成品は必ず展開。
+
+    中間素材は
+    自作OFFなら
+    そこより先を作らない。
+  */
+  if(
+    !isRoot &&
+    !shouldCraft(
+      item
+    )
+  ){
+
+    return key;
+
+  }
+
+
+  const nextPath =
+    new Set(
+      path
+    );
+
+  nextPath.add(
+    key
+  );
+
 
   for(
     const ingredient
-    of node.recipe.ingredients
+    of node.recipe
+      .ingredients
   ){
 
     const childItem = {
-      id:ingredient.id,
-      name:ingredient.name
+
+      id:
+        ingredient.id,
+
+      name:
+        ingredient.name
+
     };
+
 
     const childKey =
       itemKey(
         childItem
       );
 
+
     const edge = {
-      key:childKey,
-      item:childItem,
-      amount:ingredient.amount,
+
+      key:
+        childKey,
+
+      item:
+        childItem,
+
+      amount:
+        ingredient.amount,
+
       cycle:false
+
     };
+
 
     if(
       nextPath.has(
@@ -1465,7 +1985,8 @@ async function buildGraph(
       )
     ){
 
-      edge.cycle = true;
+      edge.cycle =
+        true;
 
       node.children.push(
         edge
@@ -1475,9 +1996,11 @@ async function buildGraph(
 
     }
 
+
     node.children.push(
       edge
     );
+
 
     await buildGraph(
       childItem,
@@ -1489,14 +2012,15 @@ async function buildGraph(
 
   }
 
+
   return key;
 
 }
 
 
-/* ===============================
+/* ========================================
    子ノード開放
-=============================== */
+======================================== */
 
 function releaseChildren(
   node,
@@ -1506,6 +2030,7 @@ function releaseChildren(
 
   const released =
     new Set();
+
 
   for(
     const edge
@@ -1518,26 +2043,35 @@ function releaseChildren(
         edge.key
       )
     ){
+
       continue;
+
     }
+
 
     released.add(
       edge.key
     );
+
 
     const next =
       (
         indegree.get(
           edge.key
         ) || 0
-      ) - 1;
+      )
+      - 1;
+
 
     indegree.set(
       edge.key,
       next
     );
 
-    if(next === 0){
+
+    if(
+      next === 0
+    ){
 
       queue.push(
         edge.key
@@ -1550,9 +2084,15 @@ function releaseChildren(
 }
 
 
-/* ===============================
+/* ========================================
    集約計算
-=============================== */
+
+   同じ中間素材が
+   複数の枝で必要になっても
+
+   全部合算してから
+   製作回数を決める。
+======================================== */
 
 function calculateGraph(
   graph,
@@ -1561,9 +2101,15 @@ function calculateGraph(
 ){
 
   const context = {
-    finals:new Map(),
-    crafts:new Map()
+
+    finals:
+      new Map(),
+
+    crafts:
+      new Map()
+
   };
+
 
   const states =
     new Map();
@@ -1578,22 +2124,31 @@ function calculateGraph(
     new Map();
 
 
+  /*
+    所持数を計算専用にコピー
+  */
   for(
     const [key,value]
-    of Object.entries(owned)
+    of Object.entries(
+      owned
+    )
   ){
 
     ownedRemaining.set(
       key,
       Math.max(
         0,
-        Number(value) || 0
+        Number(value) ||
+        0
       )
     );
 
   }
 
 
+  /*
+    入次数を初期化
+  */
   for(
     const key
     of graph.keys()
@@ -1607,19 +2162,40 @@ function calculateGraph(
   }
 
 
+  /*
+    何個の親から
+    この素材が使われているか
+  */
   for(
     const node
     of graph.values()
   ){
+
+    const counted =
+      new Set();
+
 
     for(
       const edge
       of node.children
     ){
 
-      if(edge.cycle){
+      if(
+        edge.cycle ||
+        counted.has(
+          edge.key
+        )
+      ){
+
         continue;
+
       }
+
+
+      counted.add(
+        edge.key
+      );
+
 
       indegree.set(
         edge.key,
@@ -1627,7 +2203,8 @@ function calculateGraph(
           indegree.get(
             edge.key
           ) || 0
-        ) + 1
+        )
+        + 1
       );
 
     }
@@ -1643,64 +2220,106 @@ function calculateGraph(
 
   const queue = [];
 
+
   for(
     const [key,count]
     of indegree.entries()
   ){
 
-    if(count === 0){
-      queue.push(key);
+    if(
+      count === 0
+    ){
+
+      queue.push(
+        key
+      );
+
     }
 
   }
 
 
-  while(queue.length){
+  while(
+    queue.length
+  ){
 
     const key =
       queue.shift();
 
-    const node =
-      graph.get(key);
 
-    if(!node){
+    const node =
+      graph.get(
+        key
+      );
+
+
+    if(
+      !node
+    ){
+
       continue;
+
     }
 
+
     const isRoot =
-      key === rootKey;
+      key ===
+      rootKey;
+
 
     const requested =
       Math.max(
         0,
         Number(
-          required.get(key) || 0
+          required.get(
+            key
+          ) || 0
         )
       );
 
 
-    if(requested <= 0){
+    /*
+      不要な枝でも
+      子の入次数だけは開放する。
+    */
+    if(
+      requested <= 0
+    ){
 
       states.set(
         key,
         {
-          item:node.item,
+
+          item:
+            node.item,
+
           requested:0,
+
           used:0,
+
           need:0,
+
           runs:0,
-          recipe:node.recipe,
+
+          recipe:
+            node.recipe,
+
           leaf:true,
+
           covered:false,
+
           stopped:false
+
         }
       );
+
 
       releaseChildren(
         node,
         indegree,
         queue
       );
+
 
       continue;
 
@@ -1710,15 +2329,26 @@ function calculateGraph(
     let used = 0;
 
 
-    if(!isRoot){
+    /*
+      完成品は
+      所持数を差し引かない。
+
+      素材だけ差し引く。
+    */
+    if(
+      !isRoot
+    ){
 
       const available =
         Math.max(
           0,
           Number(
-            ownedRemaining.get(key) || 0
+            ownedRemaining.get(
+              key
+            ) || 0
           )
         );
+
 
       used =
         Math.min(
@@ -1726,9 +2356,11 @@ function calculateGraph(
           available
         );
 
+
       ownedRemaining.set(
         key,
-        available - used
+        available -
+        used
       );
 
     }
@@ -1737,26 +2369,45 @@ function calculateGraph(
     const need =
       Math.max(
         0,
-        requested - used
+        requested -
+        used
       );
 
 
-    if(need <= 0){
+    /*
+      所持だけで足りた
+    */
+    if(
+      need <= 0
+    ){
 
       states.set(
         key,
         {
-          item:node.item,
+
+          item:
+            node.item,
+
           requested,
+
           used,
+
           need:0,
+
           runs:0,
-          recipe:node.recipe,
+
+          recipe:
+            node.recipe,
+
           leaf:true,
+
           covered:true,
+
           stopped:false
+
         }
       );
+
 
       releaseChildren(
         node,
@@ -1764,12 +2415,18 @@ function calculateGraph(
         queue
       );
 
+
       continue;
 
     }
 
 
-    if(!node.recipe){
+    /*
+      製作レシピなし
+    */
+    if(
+      !node.recipe
+    ){
 
       addFinal(
         context,
@@ -1779,20 +2436,33 @@ function calculateGraph(
         need
       );
 
+
       states.set(
         key,
         {
-          item:node.item,
+
+          item:
+            node.item,
+
           requested,
+
           used,
+
           need,
+
           runs:0,
+
           recipe:null,
+
           leaf:true,
+
           covered:false,
+
           stopped:false
+
         }
       );
+
 
       releaseChildren(
         node,
@@ -1800,11 +2470,15 @@ function calculateGraph(
         queue
       );
 
+
       continue;
 
     }
 
 
+    /*
+      自作OFF
+    */
     if(
       !isRoot &&
       !shouldCraft(
@@ -1822,6 +2496,7 @@ function calculateGraph(
         0
       );
 
+
       addFinal(
         context,
         node.item,
@@ -1831,20 +2506,34 @@ function calculateGraph(
         true
       );
 
+
       states.set(
         key,
         {
-          item:node.item,
+
+          item:
+            node.item,
+
           requested,
+
           used,
+
           need,
+
           runs:0,
-          recipe:node.recipe,
+
+          recipe:
+            node.recipe,
+
           leaf:true,
+
           covered:false,
+
           stopped:true
+
         }
       );
+
 
       releaseChildren(
         node,
@@ -1852,11 +2541,17 @@ function calculateGraph(
         queue
       );
 
+
       continue;
 
     }
 
 
+    /*
+      全ルート分の必要数を
+      合算したあとで
+      製作回数を計算。
+    */
     const runs =
       Math.ceil(
         need /
@@ -1864,7 +2559,9 @@ function calculateGraph(
       );
 
 
-    if(!isRoot){
+    if(
+      !isRoot
+    ){
 
       addCraft(
         context,
@@ -1882,32 +2579,55 @@ function calculateGraph(
     states.set(
       key,
       {
-        item:node.item,
+
+        item:
+          node.item,
+
         requested,
+
         used,
+
         need,
+
         runs,
-        recipe:node.recipe,
+
+        recipe:
+          node.recipe,
+
         leaf:false,
+
         covered:false,
+
         stopped:false
+
       }
     );
 
 
+    /*
+      子素材へ必要数を伝える
+    */
     for(
       const edge
       of node.children
     ){
 
       const childRequired =
-        edge.amount * runs;
+        edge.amount *
+        runs;
 
 
-      if(edge.cycle){
+      /*
+        万一循環レシピなら
+        最終素材扱いで停止
+      */
+      if(
+        edge.cycle
+      ){
 
         const childKey =
           edge.key;
+
 
         const available =
           Math.max(
@@ -1919,20 +2639,25 @@ function calculateGraph(
             )
           );
 
+
         const cycleUsed =
           Math.min(
             childRequired,
             available
           );
 
+
         ownedRemaining.set(
           childKey,
-          available - cycleUsed
+          available -
+          cycleUsed
         );
+
 
         const cycleShortage =
           childRequired -
           cycleUsed;
+
 
         addFinal(
           context,
@@ -1941,6 +2666,7 @@ function calculateGraph(
           cycleUsed,
           cycleShortage
         );
+
 
         continue;
 
@@ -1953,7 +2679,9 @@ function calculateGraph(
           required.get(
             edge.key
           ) || 0
-        ) + childRequired
+        )
+        +
+        childRequired
       );
 
     }
@@ -1976,15 +2704,20 @@ function calculateGraph(
 }
 
 
-/* ===============================
+/* ========================================
    計算
-=============================== */
+======================================== */
 
 async function calculate(){
 
-  if(!selectedItem){
+  if(
+    !selectedItem
+  ){
+
     return;
+
   }
+
 
   const amount =
     Math.max(
@@ -1996,20 +2729,25 @@ async function calculate(){
       )
     );
 
+
   qtyInput.value =
     amount;
 
+
   calculateButton.disabled =
     true;
+
 
   setStatus(
     "素材を計算しています…"
   );
 
+
   try{
 
     const graph =
       new Map();
+
 
     const rootKey =
       await buildGraph(
@@ -2019,6 +2757,7 @@ async function calculate(){
         0,
         true
       );
+
 
     const {
       context,
@@ -2040,6 +2779,7 @@ async function calculate(){
     const rendered =
       new Set();
 
+
     treeScroll.innerHTML =
       treeHTML(
         rootKey,
@@ -2056,15 +2796,20 @@ async function calculate(){
       "ok"
     );
 
+
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     setStatus(
       "計算エラー：" +
       error.message,
       "error"
     );
+
 
   }finally{
 
@@ -2076,9 +2821,9 @@ async function calculate(){
 }
 
 
-/* ===============================
+/* ========================================
    左パネル
-=============================== */
+======================================== */
 
 function renderSidebar(
   context,
@@ -2086,23 +2831,32 @@ function renderSidebar(
 ){
 
   const crafts =
-    [...context.crafts.values()]
+    [
+      ...context.crafts
+        .values()
+    ]
     .sort(
       (a,b) =>
-        a.item.name.localeCompare(
-          b.item.name,
-          "ja"
-        )
+        a.item.name
+          .localeCompare(
+            b.item.name,
+            "ja"
+          )
     );
 
+
   const finals =
-    [...context.finals.values()]
+    [
+      ...context.finals
+        .values()
+    ]
     .sort(
       (a,b) =>
-        a.item.name.localeCompare(
-          b.item.name,
-          "ja"
-        )
+        a.item.name
+          .localeCompare(
+            b.item.name,
+            "ja"
+          )
     );
 
 
@@ -2142,10 +2896,17 @@ function renderSidebar(
       </h3>
 
       <div class="hint">
-        同じ中間素材は全ルート分を合算してから製作回数を計算します。<br>
+
+        同じ中間素材は全ルート分を
+        合算してから製作回数を計算します。<br>
+
         所持数は自動で差し引きます。<br>
-        「自作する」をOFFにすると、その素材より先を展開しません。
+
+        「自作する」をOFFにすると、
+        その素材より先を展開しません。
+
       </div>
+
 
       ${
         crafts.length
@@ -2158,6 +2919,7 @@ function renderSidebar(
                 craft.item
               );
 
+
             return `
 
               <div class="craft-card">
@@ -2167,9 +2929,11 @@ function renderSidebar(
                   <div>
 
                     <div class="item-name">
+
                       ${escapeHTML(
                         craft.item.name
                       )}
+
                     </div>
 
                     <div class="small">
@@ -2194,8 +2958,11 @@ function renderSidebar(
 
                   </div>
 
+
                   <div class="need-number">
+
                     必要 ${craft.required}
+
                   </div>
 
                 </div>
@@ -2209,21 +2976,30 @@ function renderSidebar(
 
                   <input
                     class="owned-input"
-                    data-key="${escapeHTML(key)}"
+                    data-key="${escapeHTML(
+                      key
+                    )}"
                     type="number"
                     min="0"
                     inputmode="numeric"
-                    value="${ownedQty(craft.item)}"
+                    value="${ownedQty(
+                      craft.item
+                    )}"
                   >
+
 
                   <label class="checkbox-row">
 
                     <input
                       class="craft-toggle"
-                      data-key="${escapeHTML(key)}"
+                      data-key="${escapeHTML(
+                        key
+                      )}"
                       type="checkbox"
                       ${
-                        shouldCraft(craft.item)
+                        shouldCraft(
+                          craft.item
+                        )
                           ? "checked"
                           : ""
                       }
@@ -2260,12 +3036,27 @@ function renderSidebar(
         最終的に用意する素材
       </h3>
 
+
       <div class="material-grid header-row">
-        <div>素材</div>
-        <div class="number">必要</div>
-        <div class="number">所持</div>
-        <div class="number">不足</div>
+
+        <div>
+          素材
+        </div>
+
+        <div class="number">
+          必要
+        </div>
+
+        <div class="number">
+          所持
+        </div>
+
+        <div class="number">
+          不足
+        </div>
+
       </div>
+
 
       ${
         finals.length
@@ -2278,10 +3069,15 @@ function renderSidebar(
                 material.item
               );
 
+
             const shortageClass =
-              material.shortage === 0
+              material.shortage
+              === 0
+
                 ? "enough"
+
                 : "shortage";
+
 
             return `
 
@@ -2290,39 +3086,57 @@ function renderSidebar(
                 <div>
 
                   <div>
+
                     ${escapeHTML(
                       material.item.name
                     )}
+
                   </div>
+
 
                   ${
                     material.stopped
+
                       ? `
                         <div class="small">
                           自作しない
                         </div>
                       `
+
                       : ""
                   }
 
                 </div>
 
-                <div class="number required">
+
+                <div
+                  class="number required"
+                >
                   ${material.required}
                 </div>
 
+
                 <div>
+
                   <input
                     class="owned-input"
-                    data-key="${escapeHTML(key)}"
+                    data-key="${escapeHTML(
+                      key
+                    )}"
                     type="number"
                     min="0"
                     inputmode="numeric"
-                    value="${ownedQty(material.item)}"
+                    value="${ownedQty(
+                      material.item
+                    )}"
                   >
+
                 </div>
 
-                <div class="number ${shortageClass}">
+
+                <div
+                  class="number ${shortageClass}"
+                >
                   ${material.shortage}
                 </div>
 
@@ -2355,9 +3169,9 @@ function renderSidebar(
 }
 
 
-/* ===============================
+/* ========================================
    ツリー
-=============================== */
+======================================== */
 
 function treeHTML(
   key,
@@ -2369,55 +3183,105 @@ function treeHTML(
 ){
 
   const node =
-    graph.get(key);
+    graph.get(
+      key
+    );
+
 
   const state =
-    states.get(key);
+    states.get(
+      key
+    );
+
 
   if(
     !node ||
     !state
   ){
+
     return "";
+
   }
+
 
   if(
     state.requested <= 0 &&
     !isRoot
   ){
+
     return "";
+
   }
 
 
   const shared =
-    rendered.has(key);
+    rendered.has(
+      key
+    );
 
-  if(!shared){
-    rendered.add(key);
+
+  if(
+    !shared
+  ){
+
+    rendered.add(
+      key
+    );
+
   }
 
 
   let className =
     "tree-card";
 
-  if(isRoot){
-    className += " root";
+
+  if(
+    isRoot
+  ){
+
+    className +=
+      " root";
+
   }
 
-  if(state.leaf){
-    className += " leaf";
+
+  if(
+    state.leaf
+  ){
+
+    className +=
+      " leaf";
+
   }
 
-  if(state.stopped){
-    className += " stopped";
+
+  if(
+    state.stopped
+  ){
+
+    className +=
+      " stopped";
+
   }
 
-  if(state.covered){
-    className += " covered";
+
+  if(
+    state.covered
+  ){
+
+    className +=
+      " covered";
+
   }
 
-  if(shared){
-    className += " shared";
+
+  if(
+    shared
+  ){
+
+    className +=
+      " shared";
+
   }
 
 
@@ -2426,44 +3290,63 @@ function treeHTML(
 
   if(
     contribution !== null &&
-    contribution !== state.requested
+    contribution !==
+      state.requested
   ){
 
     info += `
+
       <div class="tree-info">
         この枝から ${contribution}
       </div>
+
     `;
 
   }
 
 
-  if(state.covered){
+  if(
+    state.covered
+  ){
 
     info += `
-      <div class="tree-info tree-good">
+
+      <div
+        class="tree-info tree-good"
+      >
         所持 ${state.used} で充足
       </div>
+
     `;
 
   }else{
 
-    if(state.used > 0){
+
+    if(
+      state.used > 0
+    ){
 
       info += `
+
         <div class="tree-info">
           所持 ${state.used} 使用
         </div>
+
       `;
 
     }
 
-    if(state.stopped){
+
+    if(
+      state.stopped
+    ){
 
       info += `
+
         <div class="tree-info">
           自作しない
         </div>
+
       `;
 
     }else if(
@@ -2472,9 +3355,11 @@ function treeHTML(
     ){
 
       info += `
+
         <div class="tree-info">
           ${state.runs}回製作
         </div>
+
       `;
 
     }
@@ -2482,12 +3367,18 @@ function treeHTML(
   }
 
 
-  if(shared){
+  if(
+    shared
+  ){
 
     info += `
-      <div class="tree-info tree-shared">
+
+      <div
+        class="tree-info tree-shared"
+      >
         共通素材・合算済み
       </div>
+
     `;
 
   }
@@ -2498,13 +3389,17 @@ function treeHTML(
     <div class="${className}">
 
       <div class="tree-name">
+
         ${escapeHTML(
           node.item.name
         )}
+
       </div>
 
       <div class="tree-amount">
+
         × ${state.requested}
+
       </div>
 
       ${info}
@@ -2514,12 +3409,21 @@ function treeHTML(
   `;
 
 
-  if(shared){
+  /*
+    2回目以降の同じ素材は
+    カードだけ表示して
+    先は再展開しない。
+  */
+  if(
+    shared
+  ){
 
     return `
+
       <div class="tree-node">
         ${card}
       </div>
+
     `;
 
   }
@@ -2532,9 +3436,11 @@ function treeHTML(
   ){
 
     return `
+
       <div class="tree-node">
         ${card}
       </div>
+
     `;
 
   }
@@ -2542,82 +3448,98 @@ function treeHTML(
 
   const childrenHTML =
     node.children
-    .map(
-      edge => {
+      .map(
+        edge => {
 
-        if(edge.cycle){
 
-          return `
+          if(
+            edge.cycle
+          ){
 
-            <div class="tree-child">
+            return `
 
-              <div class="tree-node">
+              <div class="tree-child">
 
-                <div class="tree-card leaf">
+                <div class="tree-node">
 
-                  <div class="tree-name">
-                    ${escapeHTML(
-                      edge.item.name
-                    )}
-                  </div>
+                  <div
+                    class="tree-card leaf"
+                  >
 
-                  <div class="tree-amount">
-                    × ${edge.amount * state.runs}
-                  </div>
+                    <div class="tree-name">
 
-                  <div class="tree-info">
-                    循環防止のため展開停止
+                      ${escapeHTML(
+                        edge.item.name
+                      )}
+
+                    </div>
+
+                    <div class="tree-amount">
+
+                      × ${
+                        edge.amount *
+                        state.runs
+                      }
+
+                    </div>
+
+                    <div class="tree-info">
+                      循環防止のため展開停止
+                    </div>
+
                   </div>
 
                 </div>
 
               </div>
 
+            `;
+
+          }
+
+
+          const childState =
+            states.get(
+              edge.key
+            );
+
+
+          if(
+            !childState ||
+            childState.requested
+              <= 0
+          ){
+
+            return "";
+
+          }
+
+
+          const contribution =
+            edge.amount *
+            state.runs;
+
+
+          return `
+
+            <div class="tree-child">
+
+              ${treeHTML(
+                edge.key,
+                graph,
+                states,
+                rendered,
+                false,
+                contribution
+              )}
+
             </div>
 
           `;
 
         }
-
-
-        const childState =
-          states.get(
-            edge.key
-          );
-
-        if(
-          !childState ||
-          childState.requested <= 0
-        ){
-          return "";
-        }
-
-
-        const contribution =
-          edge.amount *
-          state.runs;
-
-
-        return `
-
-          <div class="tree-child">
-
-            ${treeHTML(
-              edge.key,
-              graph,
-              states,
-              rendered,
-              false,
-              contribution
-            )}
-
-          </div>
-
-        `;
-
-      }
-    )
-    .join("");
+      )
+      .join("");
 
 
   return `
@@ -2627,7 +3549,9 @@ function treeHTML(
       ${card}
 
       <div class="tree-children">
+
         ${childrenHTML}
+
       </div>
 
     </div>
@@ -2637,9 +3561,9 @@ function treeHTML(
 }
 
 
-/* ===============================
+/* ========================================
    左パネル操作
-=============================== */
+======================================== */
 
 function bindSidebarEvents(){
 
@@ -2657,6 +3581,7 @@ function bindSidebarEvents(){
             const key =
               input.dataset.key;
 
+
             owned[key] =
               Math.max(
                 0,
@@ -2666,6 +3591,7 @@ function bindSidebarEvents(){
                   ) || 0
                 )
               );
+
 
             saveSettings();
 
@@ -2692,8 +3618,10 @@ function bindSidebarEvents(){
             const key =
               input.dataset.key;
 
+
             craftMode[key] =
               input.checked;
+
 
             saveSettings();
 
@@ -2708,20 +3636,25 @@ function bindSidebarEvents(){
 }
 
 
-/* ===============================
-   所持数全リセット
-=============================== */
+/* ========================================
+   所持数を全部0
+======================================== */
 
-function resetAllOwned(){
+async function resetAllOwned(){
 
   const hasOwned =
-    Object.values(owned)
+    Object.values(
+      owned
+    )
     .some(
       value =>
         Number(value) > 0
     );
 
-  if(!hasOwned){
+
+  if(
+    !hasOwned
+  ){
 
     setStatus(
       "所持数はすでにすべて0です",
@@ -2738,14 +3671,21 @@ function resetAllOwned(){
       "登録している所持数をすべて0に戻しますか？\n\n自作する設定や製作個数は変更されません。"
     );
 
-  if(!ok){
+
+  if(
+    !ok
+  ){
+
     return;
+
   }
 
 
   for(
     const key
-    of Object.keys(owned)
+    of Object.keys(
+      owned
+    )
   ){
 
     delete owned[key];
@@ -2756,42 +3696,40 @@ function resetAllOwned(){
   saveSettings();
 
 
-  if(selectedItem){
+  if(
+    selectedItem
+  ){
 
-    calculate().then(
-      () => {
-
-        setStatus(
-          "所持数をすべて0に戻しました",
-          "ok"
-        );
-
-      }
-    );
-
-  }else{
-
-    setStatus(
-      "所持数をすべて0に戻しました",
-      "ok"
-    );
+    await calculate();
 
   }
+
+
+  setStatus(
+    "所持数をすべて0に戻しました",
+    "ok"
+  );
 
 }
 
 
-/* ===============================
+/* ========================================
    解除
-=============================== */
+======================================== */
 
 function clearSelection(){
 
-  selectedItem = null;
+  selectedItem =
+    null;
 
-  searchInput.value = "";
 
-  candidates.innerHTML = "";
+  searchInput.value =
+    "";
+
+
+  candidates.innerHTML =
+    "";
+
 
   selectedBox.style.display =
     "none";
@@ -2800,8 +3738,10 @@ function clearSelection(){
   sidebar.innerHTML = `
 
     <div class="empty">
+
       アイテムを検索して<br>
       製作素材を計算してください
+
     </div>
 
   `;
@@ -2810,7 +3750,9 @@ function clearSelection(){
   treeScroll.innerHTML = `
 
     <div class="empty">
+
       ここに素材ツリーが表示されます
+
     </div>
 
   `;
@@ -2823,9 +3765,9 @@ function clearSelection(){
 }
 
 
-/* ===============================
+/* ========================================
    イベント
-=============================== */
+======================================== */
 
 searchButton.addEventListener(
   "click",
@@ -2845,7 +3787,9 @@ searchInput.addEventListener(
   "keydown",
   event => {
 
-    if(event.key === "Enter"){
+    if(
+      event.key === "Enter"
+    ){
 
       event.preventDefault();
 
@@ -2869,10 +3813,15 @@ searchInput.addEventListener(
       searchTimer
     );
 
-    const value =
-      searchInput.value.trim();
 
-    if(value.length >= 2){
+    const value =
+      searchInput.value
+        .trim();
+
+
+    if(
+      value.length >= 2
+    ){
 
       searchTimer =
         setTimeout(
@@ -2882,7 +3831,12 @@ searchInput.addEventListener(
 
     }else{
 
-      candidates.innerHTML = "";
+      candidates.innerHTML =
+        "";
+
+      setStatus(
+        "アイテム名を2文字以上入力してください"
+      );
 
     }
 
@@ -2900,7 +3854,9 @@ qtyInput.addEventListener(
   "keydown",
   event => {
 
-    if(event.key === "Enter"){
+    if(
+      event.key === "Enter"
+    ){
 
       event.preventDefault();
 
@@ -2912,15 +3868,15 @@ qtyInput.addEventListener(
 );
 
 
-clearButton.addEventListener(
-  "click",
-  clearSelection
-);
-
-
 resetOwnedButton.addEventListener(
   "click",
   resetAllOwned
+);
+
+
+clearButton.addEventListener(
+  "click",
+  clearSelection
 );
 
 })();
