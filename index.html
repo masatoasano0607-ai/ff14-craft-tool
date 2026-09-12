@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FF14 製作素材ツール</title>
+
+<style>
+:root{
+  --bg:#10151d;
+  --panel:#19212c;
+  --panel2:#202a37;
+  --line:#354357;
+  --line2:#53637a;
+  --text:#eef2f6;
+  --sub:#93a0b2;
+  --gold:#dfb25f;
+  --green:#75cf94;
+  --red:#ff9c94;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Yu Gothic",
+    "Meiryo",
+    sans-serif;
+}
+
+body{
+  min-height:100vh;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:9px 15px;
+  cursor:pointer;
+  font-weight:700;
+  background:var(--gold);
+  color:#1b150b;
+}
+
+button:hover{
+  filter:brightness(1.08);
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:default;
+}
+
+button.secondary{
+  color:var(--text);
+  background:#2c3747;
+}
+
+input{
+  border:1px solid #47576d;
+  background:#0d131b;
+  color:white;
+  border-radius:8px;
+  padding:9px 10px;
+}
+
+input:focus{
+  outline:2px solid rgba(223,178,95,.28);
+  border-color:var(--gold);
+}
+
+/* =========================
+   全体
+========================= */
+
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.header{
+  padding:14px 18px;
+  background:#18212d;
+  border-bottom:1px solid var(--line);
+}
+
+.header-inner{
+  max-width:1800px;
+  margin:0 auto;
+}
+
+.title{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.search-row{
+  display:flex;
+  gap:8px;
+}
+
+#searchInput{
+  flex:1;
+  min-width:0;
+}
+
+.status{
+  font-size:12px;
+  color:var(--sub);
+  margin-top:7px;
+  min-height:18px;
+}
+
+.status.ok{
+  color:var(--green);
+}
+
+.status.error{
+  color:var(--red);
+}
+
+/* =========================
+   検索候補
+========================= */
+
+.candidates{
+  margin-top:7px;
+  max-height:240px;
+  overflow:auto;
+}
+
+.candidate{
+  border:1px solid var(--line);
+  background:#202a37;
+  border-radius:8px;
+  padding:9px 10px;
+  margin-top:5px;
+  cursor:pointer;
+}
+
+.candidate:hover{
+  border-color:#667990;
+  background:#273343;
+}
+
+.item-name{
+  font-weight:700;
+}
+
+.small{
+  color:var(--sub);
+  font-size:11px;
+  margin-top:3px;
+}
+
+/* =========================
+   選択中アイテム
+========================= */
+
+.selected{
+  display:none;
+  margin-top:11px;
+  border-top:1px solid var(--line);
+  padding-top:11px;
+}
+
+.selected-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.selected-info{
+  flex:1;
+  min-width:0;
+}
+
+#qtyInput{
+  width:90px;
+  text-align:center;
+}
+
+/* =========================
+   メイン領域
+========================= */
+
+.workspace{
+  flex:1;
+  min-height:0;
+  width:100%;
+  max-width:1800px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:360px minmax(0,1fr);
+}
+
+.sidebar{
+  min-width:0;
+  border-right:1px solid var(--line);
+  padding:14px;
+  overflow-y:auto;
+  height:calc(100vh - 150px);
+}
+
+.main{
+  min-width:0;
+  padding:14px;
+  height:calc(100vh - 150px);
+  overflow:hidden;
+}
+
+.section{
+  margin-top:18px;
+  border-top:1px solid var(--line);
+  padding-top:14px;
+}
+
+.section:first-child{
+  margin-top:0;
+  border-top:0;
+  padding-top:0;
+}
+
+.section-title{
+  margin:0 0 9px;
+  font-size:15px;
+}
+
+.hint{
+  color:var(--sub);
+  font-size:11px;
+  line-height:1.5;
+  margin-bottom:8px;
+}
+
+.empty{
+  color:#7e8b9d;
+  text-align:center;
+  padding:45px 10px;
+  font-size:13px;
+}
+
+/* =========================
+   製作カード
+========================= */
+
+.target-card,
+.craft-card{
+  background:var(--panel2);
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:10px;
+  margin-bottom:8px;
+}
+
+.card-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.need-number{
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.craft-controls{
+  display:grid;
+  grid-template-columns:1fr 85px;
+  gap:7px;
+  align-items:center;
+  margin-top:9px;
+}
+
+.craft-controls input[type="number"]{
+  width:100%;
+  padding:6px;
+  text-align:right;
+}
+
+.checkbox-row{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.checkbox-row input{
+  width:auto;
+}
+
+/* =========================
+   最終素材
+========================= */
+
+.material-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 50px 62px 50px;
+  gap:5px;
+  align-items:center;
+  padding:7px 2px;
+  border-bottom:1px solid #293341;
+  font-size:12px;
+}
+
+.material-grid.header-row{
+  font-size:10px;
+  color:var(--sub);
+}
+
+.material-grid input{
+  width:100%;
+  padding:5px 4px;
+  text-align:right;
+}
+
+.number{
+  text-align:right;
+}
+
+.required{
+  color:var(--gold);
+  font-weight:700;
+}
+
+.shortage{
+  color:var(--red);
+  font-weight:700;
+}
+
+.enough{
+  color:var(--green);
+  font-weight:700;
+}
+
+/* =========================
+   ツリー
+========================= */
+
+.tree-panel{
+  height:100%;
+  background:#151c26;
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.tree-toolbar{
+  flex:none;
+  padding:11px 13px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.tree-toolbar-title{
+  font-weight:800;
+  font-size:15px;
+}
+
+.tree-toolbar-info{
+  color:var(--sub);
+  font-size:10px;
+}
+
+.tree-scroll{
+  flex:1;
+  overflow:auto;
+  padding:26px 28px 45px;
+}
+
+.tree-node{
+  display:flex;
+  align-items:flex-start;
+  gap:46px;
+  width:max-content;
+}
+
+.tree-card{
+  position:relative;
+  width:185px;
+  min-width:185px;
+  background:#202b39;
+  border:1px solid #40516a;
+  border-radius:9px;
+  padding:10px;
+}
+
+.tree-card.root{
+  background:#29261c;
+  border:2px solid var(--gold);
+}
+
+.tree-card.leaf{
+  background:#18212b;
+}
+
+.tree-card.stopped{
+  border-color:#d39e4e;
+}
+
+.tree-card.covered{
+  border-color:#5caf78;
+}
+
+.tree-name{
+  font-size:13px;
+  font-weight:800;
+  line-height:1.4;
+}
+
+.tree-amount{
+  color:var(--gold);
+  font-size:14px;
+  font-weight:800;
+  margin-top:5px;
+}
+
+.tree-info{
+  color:var(--sub);
+  font-size:10px;
+  margin-top:4px;
+}
+
+.tree-good{
+  color:var(--green);
+}
+
+.tree-children{
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  position:relative;
+}
+
+.tree-child{
+  position:relative;
+}
+
+.tree-child::before{
+  content:"";
+  position:absolute;
+  left:-46px;
+  top:24px;
+  width:46px;
+  border-top:1px solid var(--line2);
+}
+
+.tree-children::before{
+  content:"";
+  position:absolute;
+  left:-46px;
+  top:24px;
+  bottom:24px;
+  border-left:1px solid var(--line2);
+}
+
+/* =========================
+   スマホ
+========================= */
+
+@media(max-width:800px){
+
+  .header{
+    padding:10px;
+  }
+
+  .title{
+    font-size:18px;
+  }
+
+  .selected-row{
+    flex-wrap:wrap;
+  }
+
+  .selected-info{
+    flex-basis:100%;
+  }
+
+  #qtyInput{
+    flex:1;
+  }
+
+  .workspace{
+    display:block;
+  }
+
+  .sidebar{
+    height:auto;
+    overflow:visible;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    padding:10px;
+  }
+
+  .main{
+    height:auto;
+    padding:10px;
+    overflow:visible;
+  }
+
+  .tree-panel{
+    height:auto;
+  }
+
+  .tree-scroll{
+    overflow-x:hidden;
+    overflow-y:visible;
+    padding:12px 8px 25px;
+  }
+
+  .tree-node{
+    display:block;
+    width:auto;
+  }
+
+  .tree-card{
+    width:100%;
+    min-width:0;
+  }
+
+  .tree-children{
+    margin-top:8px;
+    margin-left:14px;
+    padding-left:14px;
+    border-left:1px solid var(--line2);
+  }
+
+  .tree-children::before{
+    display:none;
+  }
+
+  .tree-child{
+    margin-top:8px;
+  }
+
+  .tree-child::before{
+    left:-14px;
+    width:14px;
+    top:23px;
+  }
+
+  .tree-toolbar-info{
+    display:none;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+  <div class="header-inner">
+
+    <div class="title">
+      FF14 製作素材ツール
+    </div>
+
+    <div class="search-row">
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="作りたいアイテム名"
+        autocomplete="off"
+      >
+
+      <button id="searchButton">
+        検索
+      </button>
+
+    </div>
+
+    <div id="status" class="status">
+      アイテム名を2文字以上入力してください
+    </div>
+
+    <div id="candidates" class="candidates"></div>
+
+
+    <div id="selected" class="selected">
+
+      <div class="selected-row">
+
+        <div class="selected-info">
+
+          <div id="selectedName" class="item-name"></div>
+
+          <div id="selectedDetail" class="small"></div>
+
+        </div>
+
+        <input
+          id="qtyInput"
+          type="number"
+          min="1"
+          inputmode="numeric"
+          value="1"
+          title="作りたい個数"
+        >
+
+        <button id="calculateButton">
+          計算
+        </button>
+
+        <button
+          id="clearButton"
+          class="secondary"
+        >
+          解除
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</header>
+
+
+<div class="workspace">
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="empty">
+      アイテムを検索して<br>
+      製作素材を計算してください
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <div id="treePanel" class="tree-panel">
+
+      <div class="tree-toolbar">
+
+        <div class="tree-toolbar-title">
+          素材ツリー
+        </div>
+
+        <div class="tree-toolbar-info">
+          PC：左 → 右　／　スマホ：上 → 下
+        </div>
+
+      </div>
+
+      <div id="treeScroll" class="tree-scroll">
+
+        <div class="empty">
+          ここに素材ツリーが表示されます
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</div>
+
+
+<script>
+(() => {
+
+"use strict";
+
+const API = "https://v2.xivapi.com/api";
+
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
+const status = document.getElementById("status");
+const candidates = document.getElementById("candidates");
+
+const selectedBox = document.getElementById("selected");
+const selectedName = document.getElementById("selectedName");
+const selectedDetail = document.getElementById("selectedDetail");
+
+const qtyInput = document.getElementById("qtyInput");
+const calculateButton = document.getElementById("calculateButton");
+const clearButton = document.getElementById("clearButton");
+
+const sidebar = document.getElementById("sidebar");
+const treeScroll = document.getElementById("treeScroll");
+
+let selectedItem = null;
+let searchTimer = null;
+
+const recipeCache = new Map();
+
+const owned = {};
+const craftMode = {};
+
+
+/* =========================
+   保存
+========================= */
+
+function loadSettings(){
+
+  try{
+
+    Object.assign(
+      owned,
+      JSON.parse(
+        localStorage.getItem("ff14_owned_v5") || "{}"
+      )
+    );
+
+    Object.assign(
+      craftMode,
+      JSON.parse(
+        localStorage.getItem("ff14_craftmode_v5") || "{}"
+      )
+    );
+
+  }catch(e){
+    console.warn("設定読み込み失敗",e);
+  }
+
+}
+
+function saveSettings(){
+
+  try{
+
+    localStorage.setItem(
+      "ff14_owned_v5",
+      JSON.stringify(owned)
+    );
+
+    localStorage.setItem(
+      "ff14_craftmode_v5",
+      JSON.stringify(craftMode)
+    );
+
+  }catch(e){
+    console.warn("設定保存失敗",e);
+  }
+
+}
+
+loadSettings();
+
+
+/* =========================
+   共通
+========================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    })[c]
+  );
+
+}
+
+function escapeQuery(value){
+
+  return String(value)
+    .replace(/\\/g,"\\\\")
+    .replace(/"/g,'\\"');
+
+}
+
+function itemKey(item){
+
+  return String(
+    item.id || item.name
+  );
+
+}
+
+function ownedQty(item){
+
+  return Math.max(
+    0,
+    Math.floor(
+      Number(
+        owned[itemKey(item)] || 0
+      )
+    )
+  );
+
+}
+
+function shouldCraft(item){
+
+  const key = itemKey(item);
+
+  if(craftMode[key] === undefined){
+    return true;
+  }
+
+  return Boolean(craftMode[key]);
+
+}
+
+function setStatus(text,type=""){
+
+  status.textContent = text;
+
+  status.className =
+    "status" +
+    (type ? " " + type : "");
+
+}
+
+
+/* =========================
+   XIVAPI
+========================= */
+
+async function api(path,params={}){
+
+  const url = new URL(API + path);
+
+  for(const [key,value] of Object.entries(params)){
+
+    if(
+      value !== undefined &&
+      value !== null &&
+      value !== ""
+    ){
+
+      url.searchParams.set(
+        key,
+        String(value)
+      );
+
+    }
+
+  }
+
+  const response =
+    await fetch(url.toString());
+
+  if(!response.ok){
+
+    throw new Error(
+      "XIVAPI HTTP " +
+      response.status
+    );
+
+  }
+
+  return response.json();
+
+}
+
+
+/* =========================
+   アイテム検索
+========================= */
+
+async function searchItems(){
+
+  const word =
+    searchInput.value.trim();
+
+  if(word.length < 2){
+
+    candidates.innerHTML = "";
+
+    setStatus(
+      "アイテム名を2文字以上入力してください"
+    );
+
+    return;
+
+  }
+
+  setStatus("検索中…");
+
+  candidates.innerHTML = "";
+
+  try{
+
+    const data =
+      await api(
+        "/search",
+        {
+          sheets:"Item",
+          fields:"Name",
+          language:"ja",
+          limit:20,
+          query:
+            `Name~"${escapeQuery(word)}"`
+        }
+      );
+
+    const items =
+      (data.results || [])
+      .map(row => ({
+        id:Number(row.row_id || 0),
+        name:row.fields?.Name || ""
+      }))
+      .filter(
+        item =>
+          item.id &&
+          item.name
+      );
+
+    if(!items.length){
+
+      setStatus(
+        "該当するアイテムが見つかりませんでした"
+      );
+
+      return;
+
+    }
+
+    setStatus(
+      `${items.length}件見つかりました`
+    );
+
+    candidates.innerHTML =
+      items.map((item,index) => `
+
+        <div
+          class="candidate"
+          data-index="${index}"
+        >
+
+          <div class="item-name">
+            ${escapeHTML(item.name)}
+          </div>
+
+          <div class="small">
+            Item ID: ${item.id}
+          </div>
+
+        </div>
+
+      `).join("");
+
+    candidates
+      .querySelectorAll(".candidate")
+      .forEach(element => {
+
+        element.addEventListener(
+          "click",
+          () => {
+
+            const index =
+              Number(
+                element.dataset.index
+              );
+
+            chooseItem(
+              items[index]
+            );
+
+          }
+        );
+
+      });
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      "検索エラー：" +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   アイテム選択
+========================= */
+
+async function chooseItem(item){
+
+  selectedItem = item;
+
+  searchInput.value =
+    item.name;
+
+  candidates.innerHTML = "";
+
+  selectedName.textContent =
+    item.name;
+
+  selectedDetail.textContent =
+    "レシピ確認中…";
+
+  selectedBox.style.display =
+    "block";
+
+  setStatus(
+    "レシピを確認しています…"
+  );
+
+  try{
+
+    const recipes =
+      await getRecipes(item.name);
+
+    if(recipes.length){
+
+      const recipe =
+        recipes[0];
+
+      selectedDetail.textContent =
+        `${recipe.craft}` +
+        (
+          recipe.level
+            ? ` Lv${recipe.level}`
+            : ""
+        ) +
+        ` / 1回で${recipe.yield}個`;
+
+      setStatus(
+        "準備OK",
+        "ok"
+      );
+
+    }else{
+
+      selectedDetail.textContent =
+        "製作レシピなし";
+
+      setStatus(
+        "このアイテムには製作レシピがありません"
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    selectedDetail.textContent =
+      "レシピ確認失敗";
+
+    setStatus(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   XIVAPI relationship
+========================= */
+
+function relationFields(value){
+
+  if(
+    !value ||
+    typeof value !== "object"
+  ){
+    return {};
+  }
+
+  if(
+    value.fields &&
+    typeof value.fields === "object"
+  ){
+    return value.fields;
+  }
+
+  return value;
+
+}
+
+function relationId(value){
+
+  if(
+    !value ||
+    typeof value !== "object"
+  ){
+    return 0;
+  }
+
+  return Number(
+    value.row_id ??
+    value.rowId ??
+    value.value ??
+    value.id ??
+    0
+  ) || 0;
+
+}
+
+
+/* =========================
+   レシピ取得
+========================= */
+
+async function getRecipes(name){
+
+  if(recipeCache.has(name)){
+
+    return recipeCache.get(name);
+
+  }
+
+  const fields = [
+    "ItemResult.Name",
+    "AmountResult",
+    "AmountIngredient",
+    "Ingredient[].Name",
+    "CraftType.Name",
+    "RecipeLevelTable.ClassJobLevel",
+    "IsSecondary"
+  ].join(",");
+
+  const data =
+    await api(
+      "/search",
+      {
+        sheets:"Recipe",
+        fields,
+        language:"ja",
+        limit:30,
+        query:
+          `ItemResult.Name="${escapeQuery(name)}"`
+      }
+    );
+
+  const recipes =
+    (data.results || [])
+    .map(row => {
+
+      const fields =
+        row.fields || {};
+
+      const result =
+        relationFields(
+          fields.ItemResult
+        );
+
+      const craft =
+        relationFields(
+          fields.CraftType
+        );
+
+      const level =
+        relationFields(
+          fields.RecipeLevelTable
+        );
+
+      const ingredients =
+        (
+          Array.isArray(fields.Ingredient)
+            ? fields.Ingredient
+            : []
+        )
+        .map((ingredient,index) => {
+
+          const ingredientFields =
+            relationFields(ingredient);
+
+          return {
+
+            id:
+              relationId(ingredient),
+
+            name:
+              ingredientFields.Name || "",
+
+            amount:
+              Number(
+                Array.isArray(
+                  fields.AmountIngredient
+                )
+                ? fields.AmountIngredient[index] || 0
+                : 0
+              )
+
+          };
+
+        })
+        .filter(
+          ingredient =>
+            ingredient.id &&
+            ingredient.name &&
+            ingredient.amount > 0
+        );
+
+      return {
+
+        id:
+          Number(row.row_id || 0),
+
+        resultName:
+          result.Name || "",
+
+        yield:
+          Math.max(
+            1,
+            Number(
+              fields.AmountResult || 1
+            )
+          ),
+
+        craft:
+          craft.Name || "製作",
+
+        level:
+          Number(
+            level.ClassJobLevel || 0
+          ),
+
+        secondary:
+          Boolean(
+            fields.IsSecondary
+          ),
+
+        ingredients
+
+      };
+
+    })
+    .filter(
+      recipe =>
+        recipe.resultName === name &&
+        recipe.ingredients.length
+    );
+
+  recipes.sort(
+    (a,b) =>
+
+      Number(a.secondary)
+      -
+      Number(b.secondary)
+
+      ||
+
+      a.level - b.level
+
+      ||
+
+      a.id - b.id
+  );
+
+  recipeCache.set(
+    name,
+    recipes
+  );
+
+  return recipes;
+
+}
+
+
+/* =========================
+   集計
+========================= */
+
+function addFinal(
+  context,
+  item,
+  required,
+  used,
+  shortage,
+  stopped=false
+){
+
+  const key =
+    itemKey(item);
+
+  if(!context.finals.has(key)){
+
+    context.finals.set(
+      key,
+      {
+        item,
+        required:0,
+        used:0,
+        shortage:0,
+        stopped:false
+      }
+    );
+
+  }
+
+  const entry =
+    context.finals.get(key);
+
+  entry.required += required;
+  entry.used += used;
+  entry.shortage += shortage;
+
+  if(stopped){
+    entry.stopped = true;
+  }
+
+}
+
+
+function addCraft(
+  context,
+  item,
+  recipe,
+  required,
+  used,
+  shortage,
+  runs
+){
+
+  const key =
+    itemKey(item);
+
+  if(!context.crafts.has(key)){
+
+    context.crafts.set(
+      key,
+      {
+        item,
+        recipe,
+        required:0,
+        used:0,
+        shortage:0,
+        runs:0
+      }
+    );
+
+  }
+
+  const entry =
+    context.crafts.get(key);
+
+  entry.required += required;
+  entry.used += used;
+  entry.shortage += shortage;
+  entry.runs += runs;
+
+}
+
+
+/* =========================
+   再帰展開
+========================= */
+
+async function expand(
+  item,
+  requested,
+  context,
+  ownedRemaining,
+  depth=0,
+  chain=new Set(),
+  isRoot=false
+){
+
+  const key =
+    itemKey(item);
+
+  let used = 0;
+
+  /*
+    完成品は所持数を引かない。
+    素材・中間素材は所持数を消費する。
+  */
+  if(!isRoot){
+
+    const available =
+      Math.max(
+        0,
+        Number(
+          ownedRemaining.get(key) || 0
+        )
+      );
+
+    used =
+      Math.min(
+        requested,
+        available
+      );
+
+    ownedRemaining.set(
+      key,
+      available - used
+    );
+
+  }
+
+  const need =
+    Math.max(
+      0,
+      requested - used
+    );
+
+
+  /*
+    所持品だけで足りる場合
+  */
+  if(need <= 0){
+
+    return {
+      item,
+      requested,
+      used,
+      need:0,
+      covered:true,
+      leaf:true
+    };
+
+  }
+
+
+  /*
+    無限ループ防止
+  */
+  if(
+    depth > 25 ||
+    chain.has(key)
+  ){
+
+    addFinal(
+      context,
+      item,
+      requested,
+      used,
+      need
+    );
+
+    return {
+      item,
+      requested,
+      used,
+      need,
+      leaf:true
+    };
+
+  }
+
+
+  const recipes =
+    await getRecipes(
+      item.name
+    );
+
+  const recipe =
+    recipes[0] || null;
+
+
+  /*
+    レシピなし＝最終素材
+  */
+  if(!recipe){
+
+    addFinal(
+      context,
+      item,
+      requested,
+      used,
+      need
+    );
+
+    return {
+      item,
+      requested,
+      used,
+      need,
+      leaf:true
+    };
+
+  }
+
+
+  /*
+    中間素材として一覧に登録
+  */
+  if(!isRoot){
+
+    const crafting =
+      shouldCraft(item);
+
+    const runs =
+      crafting
+        ? Math.ceil(
+            need / recipe.yield
+          )
+        : 0;
+
+    addCraft(
+      context,
+      item,
+      recipe,
+      requested,
+      used,
+      need,
+      runs
+    );
+
+  }
+
+
+  /*
+    自作OFF
+  */
+  if(
+    !isRoot &&
+    !shouldCraft(item)
+  ){
+
+    addFinal(
+      context,
+      item,
+      requested,
+      used,
+      need,
+      true
+    );
+
+    return {
+      item,
+      requested,
+      used,
+      need,
+      recipe,
+      stopped:true,
+      leaf:true
+    };
+
+  }
+
+
+  const runs =
+    Math.ceil(
+      need / recipe.yield
+    );
+
+  const nextChain =
+    new Set(chain);
+
+  nextChain.add(key);
+
+  const children = [];
+
+  for(const ingredient of recipe.ingredients){
+
+    const amount =
+      ingredient.amount * runs;
+
+    const child =
+      await expand(
+
+        {
+          id:ingredient.id,
+          name:ingredient.name
+        },
+
+        amount,
+
+        context,
+
+        ownedRemaining,
+
+        depth + 1,
+
+        nextChain,
+
+        false
+
+      );
+
+    children.push(child);
+
+  }
+
+  return {
+    item,
+    requested,
+    used,
+    need,
+    recipe,
+    runs,
+    leaf:false,
+    children
+  };
+
+}
+
+
+/* =========================
+   計算
+========================= */
+
+async function calculate(){
+
+  if(!selectedItem){
+    return;
+  }
+
+  const amount =
+    Math.max(
+      1,
+      Math.floor(
+        Number(
+          qtyInput.value
+        ) || 1
+      )
+    );
+
+  qtyInput.value =
+    amount;
+
+  calculateButton.disabled =
+    true;
+
+  setStatus(
+    "素材を計算しています…"
+  );
+
+  try{
+
+    const context = {
+      finals:new Map(),
+      crafts:new Map()
+    };
+
+    /*
+      所持数を計算ごとにコピー。
+      同じ素材が複数箇所に出ても
+      所持品を二重使用しない。
+    */
+    const ownedRemaining =
+      new Map();
+
+    for(
+      const [key,value]
+      of Object.entries(owned)
+    ){
+
+      ownedRemaining.set(
+        key,
+        Math.max(
+          0,
+          Number(value) || 0
+        )
+      );
+
+    }
+
+    const tree =
+      await expand(
+        selectedItem,
+        amount,
+        context,
+        ownedRemaining,
+        0,
+        new Set(),
+        true
+      );
+
+    renderSidebar(
+      context,
+      amount
+    );
+
+    treeScroll.innerHTML =
+      treeHTML(
+        tree,
+        true
+      );
+
+    setStatus(
+      "計算完了",
+      "ok"
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      "計算エラー：" +
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    calculateButton.disabled =
+      false;
+
+  }
+
+}
+
+
+/* =========================
+   左パネル
+========================= */
+
+function renderSidebar(
+  context,
+  targetAmount
+){
+
+  const crafts =
+    [...context.crafts.values()]
+    .sort(
+      (a,b) =>
+        a.item.name.localeCompare(
+          b.item.name,
+          "ja"
+        )
+    );
+
+  const finals =
+    [...context.finals.values()]
+    .sort(
+      (a,b) =>
+        a.item.name.localeCompare(
+          b.item.name,
+          "ja"
+        )
+    );
+
+
+  sidebar.innerHTML = `
+
+    <section class="section">
+
+      <h3 class="section-title">
+        製作内容
+      </h3>
+
+      <div class="target-card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="item-name">
+              ${escapeHTML(
+                selectedItem.name
+              )}
+            </div>
+
+          </div>
+
+          <div class="need-number">
+            × ${targetAmount}
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="section">
+
+      <h3 class="section-title">
+        中間素材
+      </h3>
+
+      <div class="hint">
+        所持数は自動で差し引きます。<br>
+        「自作する」をOFFにすると、
+        その素材より先を展開しません。
+      </div>
+
+      ${
+        crafts.length
+
+        ? crafts.map(craft => {
+
+          const key =
+            itemKey(
+              craft.item
+            );
+
+          return `
+
+            <div class="craft-card">
+
+              <div class="card-head">
+
+                <div>
+
+                  <div class="item-name">
+
+                    ${escapeHTML(
+                      craft.item.name
+                    )}
+
+                  </div>
+
+                  <div class="small">
+
+                    ${escapeHTML(
+                      craft.recipe.craft
+                    )}
+
+                    ${
+                      craft.recipe.level
+                        ? ` Lv${craft.recipe.level}`
+                        : ""
+                    }
+
+                    ${
+                      craft.runs
+                        ? ` / ${craft.runs}回製作`
+                        : ""
+                    }
+
+                  </div>
+
+                </div>
+
+                <div class="need-number">
+
+                  必要 ${craft.required}
+
+                </div>
+
+              </div>
+
+
+              <div class="craft-controls">
+
+                <span class="small">
+                  所持数
+                </span>
+
+                <input
+                  class="owned-input"
+                  data-key="${escapeHTML(key)}"
+                  type="number"
+                  min="0"
+                  inputmode="numeric"
+                  value="${ownedQty(craft.item)}"
+                >
+
+
+                <label class="checkbox-row">
+
+                  <input
+                    class="craft-toggle"
+                    data-key="${escapeHTML(key)}"
+                    type="checkbox"
+                    ${
+                      shouldCraft(craft.item)
+                        ? "checked"
+                        : ""
+                    }
+                  >
+
+                  自作する
+
+                </label>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("")
+
+        : `
+
+          <div class="hint">
+            中間素材はありません
+          </div>
+
+        `
+      }
+
+    </section>
+
+
+    <section class="section">
+
+      <h3 class="section-title">
+        最終的に用意する素材
+      </h3>
+
+      <div class="material-grid header-row">
+
+        <div>素材</div>
+        <div class="number">必要</div>
+        <div class="number">所持</div>
+        <div class="number">不足</div>
+
+      </div>
+
+      ${
+        finals.length
+
+        ? finals.map(material => {
+
+          const key =
+            itemKey(
+              material.item
+            );
+
+          const shortageClass =
+            material.shortage === 0
+              ? "enough"
+              : "shortage";
+
+          return `
+
+            <div class="material-grid">
+
+              <div>
+
+                <div>
+                  ${escapeHTML(
+                    material.item.name
+                  )}
+                </div>
+
+                ${
+                  material.stopped
+                    ? `
+                      <div class="small">
+                        自作しない
+                      </div>
+                    `
+                    : ""
+                }
+
+              </div>
+
+              <div class="number required">
+                ${material.required}
+              </div>
+
+              <div>
+
+                <input
+                  class="owned-input"
+                  data-key="${escapeHTML(key)}"
+                  type="number"
+                  min="0"
+                  inputmode="numeric"
+                  value="${ownedQty(material.item)}"
+                >
+
+              </div>
+
+              <div class="number ${shortageClass}">
+                ${material.shortage}
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("")
+
+        : `
+
+          <div class="hint" style="padding:12px 0">
+
+            必要素材はありません
+
+          </div>
+
+        `
+      }
+
+    </section>
+
+  `;
+
+
+  bindSidebarEvents();
+
+}
+
+
+/* =========================
+   ツリー表示
+========================= */
+
+function treeHTML(
+  node,
+  isRoot=false
+){
+
+  let className =
+    "tree-card";
+
+  if(isRoot){
+    className += " root";
+  }
+
+  if(node.leaf){
+    className += " leaf";
+  }
+
+  if(node.stopped){
+    className += " stopped";
+  }
+
+  if(node.covered){
+    className += " covered";
+  }
+
+
+  let info = "";
+
+
+  if(node.covered){
+
+    info += `
+
+      <div class="tree-info tree-good">
+        所持品で充足
+      </div>
+
+    `;
+
+  }else{
+
+    if(node.used > 0){
+
+      info += `
+
+        <div class="tree-info">
+          所持 ${node.used} 使用
+        </div>
+
+      `;
+
+    }
+
+    if(node.stopped){
+
+      info += `
+
+        <div class="tree-info">
+          自作しない
+        </div>
+
+      `;
+
+    }else if(
+      !node.leaf &&
+      node.runs
+    ){
+
+      info += `
+
+        <div class="tree-info">
+          ${node.runs}回製作
+        </div>
+
+      `;
+
+    }
+
+  }
+
+
+  const card = `
+
+    <div class="${className}">
+
+      <div class="tree-name">
+        ${escapeHTML(
+          node.item.name
+        )}
+      </div>
+
+      <div class="tree-amount">
+        × ${node.requested}
+      </div>
+
+      ${info}
+
+    </div>
+
+  `;
+
+
+  if(
+    node.leaf ||
+    !node.children ||
+    !node.children.length
+  ){
+
+    return `
+
+      <div class="tree-node">
+        ${card}
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div class="tree-node">
+
+      ${card}
+
+      <div class="tree-children">
+
+        ${
+          node.children.map(
+            child => `
+
+              <div class="tree-child">
+
+                ${treeHTML(
+                  child,
+                  false
+                )}
+
+              </div>
+
+            `
+          ).join("")
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   左パネル操作
+========================= */
+
+function bindSidebarEvents(){
+
+  sidebar
+    .querySelectorAll(
+      ".owned-input"
+    )
+    .forEach(input => {
+
+      input.addEventListener(
+        "change",
+        () => {
+
+          const key =
+            input.dataset.key;
+
+          owned[key] =
+            Math.max(
+              0,
+              Math.floor(
+                Number(
+                  input.value
+                ) || 0
+              )
+            );
+
+          saveSettings();
+
+          calculate();
+
+        }
+      );
+
+    });
+
+
+  sidebar
+    .querySelectorAll(
+      ".craft-toggle"
+    )
+    .forEach(input => {
+
+      input.addEventListener(
+        "change",
+        () => {
+
+          const key =
+            input.dataset.key;
+
+          craftMode[key] =
+            input.checked;
+
+          saveSettings();
+
+          calculate();
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================
+   リセット
+========================= */
+
+function clearSelection(){
+
+  selectedItem = null;
+
+  searchInput.value = "";
+
+  candidates.innerHTML = "";
+
+  selectedBox.style.display =
+    "none";
+
+  sidebar.innerHTML = `
+
+    <div class="empty">
+
+      アイテムを検索して<br>
+      製作素材を計算してください
+
+    </div>
+
+  `;
+
+  treeScroll.innerHTML = `
+
+    <div class="empty">
+      ここに素材ツリーが表示されます
+    </div>
+
+  `;
+
+  setStatus(
+    "アイテム名を2文字以上入力してください"
+  );
+
+}
+
+
+/* =========================
+   イベント
+========================= */
+
+searchButton.addEventListener(
+  "click",
+  () => {
+
+    clearTimeout(
+      searchTimer
+    );
+
+    searchItems();
+
+  }
+);
+
+
+searchInput.addEventListener(
+  "keydown",
+  event => {
+
+    if(event.key === "Enter"){
+
+      event.preventDefault();
+
+      clearTimeout(
+        searchTimer
+      );
+
+      searchItems();
+
+    }
+
+  }
+);
+
+
+searchInput.addEventListener(
+  "input",
+  () => {
+
+    clearTimeout(
+      searchTimer
+    );
+
+    const value =
+      searchInput.value.trim();
+
+    if(value.length >= 2){
+
+      searchTimer =
+        setTimeout(
+          searchItems,
+          400
+        );
+
+    }else{
+
+      candidates.innerHTML = "";
+
+    }
+
+  }
+);
+
+
+calculateButton.addEventListener(
+  "click",
+  calculate
+);
+
+
+qtyInput.addEventListener(
+  "keydown",
+  event => {
+
+    if(event.key === "Enter"){
+
+      event.preventDefault();
+
+      calculate();
+
+    }
+
+  }
+);
+
+
+clearButton.addEventListener(
+  "click",
+  clearSelection
+);
+
+})();
+</script>
+
+</body>
+</html>
