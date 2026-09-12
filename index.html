@@ -18,6 +18,7 @@
   --gold:#dfb25f;
   --green:#75cf94;
   --red:#ff9c94;
+  --blue:#77a8df;
 }
 
 *{
@@ -85,9 +86,7 @@ input:focus{
   border-color:var(--gold);
 }
 
-/* =========================
-   全体
-========================= */
+/* ===== 全体 ===== */
 
 .app{
   min-height:100vh;
@@ -137,9 +136,7 @@ input:focus{
   color:var(--red);
 }
 
-/* =========================
-   検索候補
-========================= */
+/* ===== 検索候補 ===== */
 
 .candidates{
   margin-top:7px;
@@ -171,9 +168,7 @@ input:focus{
   margin-top:3px;
 }
 
-/* =========================
-   選択中アイテム
-========================= */
+/* ===== 選択中 ===== */
 
 .selected{
   display:none;
@@ -198,9 +193,7 @@ input:focus{
   text-align:center;
 }
 
-/* =========================
-   メイン領域
-========================= */
+/* ===== メイン ===== */
 
 .workspace{
   flex:1;
@@ -258,9 +251,7 @@ input:focus{
   font-size:13px;
 }
 
-/* =========================
-   製作カード
-========================= */
+/* ===== 製作カード ===== */
 
 .target-card,
 .craft-card{
@@ -312,9 +303,7 @@ input:focus{
   width:auto;
 }
 
-/* =========================
-   最終素材
-========================= */
+/* ===== 最終素材 ===== */
 
 .material-grid{
   display:grid;
@@ -356,9 +345,7 @@ input:focus{
   font-weight:700;
 }
 
-/* =========================
-   ツリー
-========================= */
+/* ===== ツリー ===== */
 
 .tree-panel{
   height:100%;
@@ -430,6 +417,10 @@ input:focus{
   border-color:#5caf78;
 }
 
+.tree-card.shared{
+  border-color:var(--blue);
+}
+
 .tree-name{
   font-size:13px;
   font-weight:800;
@@ -447,10 +438,15 @@ input:focus{
   color:var(--sub);
   font-size:10px;
   margin-top:4px;
+  line-height:1.4;
 }
 
 .tree-good{
   color:var(--green);
+}
+
+.tree-shared{
+  color:#8fc1f3;
 }
 
 .tree-children{
@@ -482,9 +478,7 @@ input:focus{
   border-left:1px solid var(--line2);
 }
 
-/* =========================
-   スマホ
-========================= */
+/* ===== スマホ ===== */
 
 @media(max-width:800px){
 
@@ -570,7 +564,6 @@ input:focus{
   .tree-toolbar-info{
     display:none;
   }
-
 }
 </style>
 </head>
@@ -587,7 +580,6 @@ input:focus{
     </div>
 
     <div class="search-row">
-
       <input
         id="searchInput"
         type="text"
@@ -598,7 +590,6 @@ input:focus{
       <button id="searchButton">
         検索
       </button>
-
     </div>
 
     <div id="status" class="status">
@@ -607,17 +598,13 @@ input:focus{
 
     <div id="candidates" class="candidates"></div>
 
-
     <div id="selected" class="selected">
 
       <div class="selected-row">
 
         <div class="selected-info">
-
           <div id="selectedName" class="item-name"></div>
-
           <div id="selectedDetail" class="small"></div>
-
         </div>
 
         <input
@@ -662,7 +649,7 @@ input:focus{
 
   <main class="main">
 
-    <div id="treePanel" class="tree-panel">
+    <div class="tree-panel">
 
       <div class="tree-toolbar">
 
@@ -700,21 +687,42 @@ input:focus{
 
 const API = "https://v2.xivapi.com/api";
 
-const searchInput = document.getElementById("searchInput");
-const searchButton = document.getElementById("searchButton");
-const status = document.getElementById("status");
-const candidates = document.getElementById("candidates");
+const searchInput =
+  document.getElementById("searchInput");
 
-const selectedBox = document.getElementById("selected");
-const selectedName = document.getElementById("selectedName");
-const selectedDetail = document.getElementById("selectedDetail");
+const searchButton =
+  document.getElementById("searchButton");
 
-const qtyInput = document.getElementById("qtyInput");
-const calculateButton = document.getElementById("calculateButton");
-const clearButton = document.getElementById("clearButton");
+const status =
+  document.getElementById("status");
 
-const sidebar = document.getElementById("sidebar");
-const treeScroll = document.getElementById("treeScroll");
+const candidates =
+  document.getElementById("candidates");
+
+const selectedBox =
+  document.getElementById("selected");
+
+const selectedName =
+  document.getElementById("selectedName");
+
+const selectedDetail =
+  document.getElementById("selectedDetail");
+
+const qtyInput =
+  document.getElementById("qtyInput");
+
+const calculateButton =
+  document.getElementById("calculateButton");
+
+const clearButton =
+  document.getElementById("clearButton");
+
+const sidebar =
+  document.getElementById("sidebar");
+
+const treeScroll =
+  document.getElementById("treeScroll");
+
 
 let selectedItem = null;
 let searchTimer = null;
@@ -725,9 +733,9 @@ const owned = {};
 const craftMode = {};
 
 
-/* =========================
+/* ========================================
    保存
-========================= */
+======================================== */
 
 function loadSettings(){
 
@@ -747,11 +755,17 @@ function loadSettings(){
       )
     );
 
-  }catch(e){
-    console.warn("設定読み込み失敗",e);
+  }catch(error){
+
+    console.warn(
+      "設定読み込み失敗",
+      error
+    );
+
   }
 
 }
+
 
 function saveSettings(){
 
@@ -767,8 +781,13 @@ function saveSettings(){
       JSON.stringify(craftMode)
     );
 
-  }catch(e){
-    console.warn("設定保存失敗",e);
+  }catch(error){
+
+    console.warn(
+      "設定保存失敗",
+      error
+    );
+
   }
 
 }
@@ -776,24 +795,27 @@ function saveSettings(){
 loadSettings();
 
 
-/* =========================
+/* ========================================
    共通
-========================= */
+======================================== */
 
 function escapeHTML(value){
 
-  return String(value ?? "").replace(
+  return String(
+    value ?? ""
+  ).replace(
     /[&<>"']/g,
-    c => ({
+    character => ({
       "&":"&amp;",
       "<":"&lt;",
       ">":"&gt;",
       '"':"&quot;",
       "'":"&#39;"
-    })[c]
+    })[character]
   );
 
 }
+
 
 function escapeQuery(value){
 
@@ -803,6 +825,7 @@ function escapeQuery(value){
 
 }
 
+
 function itemKey(item){
 
   return String(
@@ -810,6 +833,7 @@ function itemKey(item){
   );
 
 }
+
 
 function ownedQty(item){
 
@@ -824,38 +848,62 @@ function ownedQty(item){
 
 }
 
+
 function shouldCraft(item){
 
-  const key = itemKey(item);
+  const key =
+    itemKey(item);
 
-  if(craftMode[key] === undefined){
+  if(
+    craftMode[key] === undefined
+  ){
     return true;
   }
 
-  return Boolean(craftMode[key]);
+  return Boolean(
+    craftMode[key]
+  );
 
 }
 
-function setStatus(text,type=""){
 
-  status.textContent = text;
+function setStatus(
+  text,
+  type=""
+){
+
+  status.textContent =
+    text;
 
   status.className =
     "status" +
-    (type ? " " + type : "");
+    (
+      type
+        ? " " + type
+        : ""
+    );
 
 }
 
 
-/* =========================
+/* ========================================
    XIVAPI
-========================= */
+======================================== */
 
-async function api(path,params={}){
+async function api(
+  path,
+  params={}
+){
 
-  const url = new URL(API + path);
+  const url =
+    new URL(
+      API + path
+    );
 
-  for(const [key,value] of Object.entries(params)){
+  for(
+    const [key,value]
+    of Object.entries(params)
+  ){
 
     if(
       value !== undefined &&
@@ -873,7 +921,9 @@ async function api(path,params={}){
   }
 
   const response =
-    await fetch(url.toString());
+    await fetch(
+      url.toString()
+    );
 
   if(!response.ok){
 
@@ -889,9 +939,9 @@ async function api(path,params={}){
 }
 
 
-/* =========================
-   アイテム検索
-========================= */
+/* ========================================
+   検索
+======================================== */
 
 async function searchItems(){
 
@@ -910,7 +960,9 @@ async function searchItems(){
 
   }
 
-  setStatus("検索中…");
+  setStatus(
+    "検索中…"
+  );
 
   candidates.innerHTML = "";
 
@@ -931,10 +983,17 @@ async function searchItems(){
 
     const items =
       (data.results || [])
-      .map(row => ({
-        id:Number(row.row_id || 0),
-        name:row.fields?.Name || ""
-      }))
+      .map(
+        row => ({
+          id:
+            Number(
+              row.row_id || 0
+            ),
+
+          name:
+            row.fields?.Name || ""
+        })
+      )
       .filter(
         item =>
           item.id &&
@@ -956,46 +1015,52 @@ async function searchItems(){
     );
 
     candidates.innerHTML =
-      items.map((item,index) => `
+      items.map(
+        (item,index) => `
 
-        <div
-          class="candidate"
-          data-index="${index}"
-        >
+          <div
+            class="candidate"
+            data-index="${index}"
+          >
 
-          <div class="item-name">
-            ${escapeHTML(item.name)}
+            <div class="item-name">
+              ${escapeHTML(item.name)}
+            </div>
+
+            <div class="small">
+              Item ID: ${item.id}
+            </div>
+
           </div>
 
-          <div class="small">
-            Item ID: ${item.id}
-          </div>
-
-        </div>
-
-      `).join("");
+        `
+      ).join("");
 
     candidates
-      .querySelectorAll(".candidate")
-      .forEach(element => {
+      .querySelectorAll(
+        ".candidate"
+      )
+      .forEach(
+        element => {
 
-        element.addEventListener(
-          "click",
-          () => {
+          element.addEventListener(
+            "click",
+            () => {
 
-            const index =
-              Number(
-                element.dataset.index
+              const index =
+                Number(
+                  element.dataset.index
+                );
+
+              chooseItem(
+                items[index]
               );
 
-            chooseItem(
-              items[index]
-            );
+            }
+          );
 
-          }
-        );
-
-      });
+        }
+      );
 
   }catch(error){
 
@@ -1012,18 +1077,20 @@ async function searchItems(){
 }
 
 
-/* =========================
+/* ========================================
    アイテム選択
-========================= */
+======================================== */
 
 async function chooseItem(item){
 
-  selectedItem = item;
+  selectedItem =
+    item;
 
   searchInput.value =
     item.name;
 
-  candidates.innerHTML = "";
+  candidates.innerHTML =
+    "";
 
   selectedName.textContent =
     item.name;
@@ -1041,7 +1108,9 @@ async function chooseItem(item){
   try{
 
     const recipes =
-      await getRecipes(item.name);
+      await getRecipes(
+        item.name
+      );
 
     if(recipes.length){
 
@@ -1090,9 +1159,9 @@ async function chooseItem(item){
 }
 
 
-/* =========================
+/* ========================================
    XIVAPI relationship
-========================= */
+======================================== */
 
 function relationFields(value){
 
@@ -1114,6 +1183,7 @@ function relationFields(value){
 
 }
 
+
 function relationId(value){
 
   if(
@@ -1134,15 +1204,19 @@ function relationId(value){
 }
 
 
-/* =========================
+/* ========================================
    レシピ取得
-========================= */
+======================================== */
 
 async function getRecipes(name){
 
-  if(recipeCache.has(name)){
+  if(
+    recipeCache.has(name)
+  ){
 
-    return recipeCache.get(name);
+    return recipeCache.get(
+      name
+    );
 
   }
 
@@ -1171,98 +1245,134 @@ async function getRecipes(name){
 
   const recipes =
     (data.results || [])
-    .map(row => {
+    .map(
+      row => {
 
-      const fields =
-        row.fields || {};
+        const fields =
+          row.fields || {};
 
-      const result =
-        relationFields(
-          fields.ItemResult
-        );
+        const result =
+          relationFields(
+            fields.ItemResult
+          );
 
-      const craft =
-        relationFields(
-          fields.CraftType
-        );
+        const craft =
+          relationFields(
+            fields.CraftType
+          );
 
-      const level =
-        relationFields(
-          fields.RecipeLevelTable
-        );
+        const level =
+          relationFields(
+            fields.RecipeLevelTable
+          );
 
-      const ingredients =
-        (
-          Array.isArray(fields.Ingredient)
-            ? fields.Ingredient
-            : []
-        )
-        .map((ingredient,index) => {
+        const ingredientMap =
+          new Map();
 
-          const ingredientFields =
-            relationFields(ingredient);
+        const ingredients =
+          Array.isArray(
+            fields.Ingredient
+          )
+          ? fields.Ingredient
+          : [];
 
-          return {
+        ingredients.forEach(
+          (ingredient,index) => {
 
-            id:
-              relationId(ingredient),
+            const ingredientFields =
+              relationFields(
+                ingredient
+              );
 
-            name:
-              ingredientFields.Name || "",
+            const id =
+              relationId(
+                ingredient
+              );
 
-            amount:
+            const name =
+              ingredientFields.Name || "";
+
+            const amount =
               Number(
                 Array.isArray(
                   fields.AmountIngredient
                 )
                 ? fields.AmountIngredient[index] || 0
                 : 0
-              )
+              );
 
-          };
+            if(
+              !id ||
+              !name ||
+              amount <= 0
+            ){
+              return;
+            }
 
-        })
-        .filter(
-          ingredient =>
-            ingredient.id &&
-            ingredient.name &&
-            ingredient.amount > 0
+            const key =
+              String(id);
+
+            if(
+              ingredientMap.has(key)
+            ){
+
+              ingredientMap.get(key).amount +=
+                amount;
+
+            }else{
+
+              ingredientMap.set(
+                key,
+                {
+                  id,
+                  name,
+                  amount
+                }
+              );
+
+            }
+
+          }
         );
 
-      return {
+        return {
 
-        id:
-          Number(row.row_id || 0),
-
-        resultName:
-          result.Name || "",
-
-        yield:
-          Math.max(
-            1,
+          id:
             Number(
-              fields.AmountResult || 1
-            )
-          ),
+              row.row_id || 0
+            ),
 
-        craft:
-          craft.Name || "製作",
+          resultName:
+            result.Name || "",
 
-        level:
-          Number(
-            level.ClassJobLevel || 0
-          ),
+          yield:
+            Math.max(
+              1,
+              Number(
+                fields.AmountResult || 1
+              )
+            ),
 
-        secondary:
-          Boolean(
-            fields.IsSecondary
-          ),
+          craft:
+            craft.Name || "製作",
 
-        ingredients
+          level:
+            Number(
+              level.ClassJobLevel || 0
+            ),
 
-      };
+          secondary:
+            Boolean(
+              fields.IsSecondary
+            ),
 
-    })
+          ingredients:
+            [...ingredientMap.values()]
+
+        };
+
+      }
+    )
     .filter(
       recipe =>
         recipe.resultName === name &&
@@ -1295,9 +1405,9 @@ async function getRecipes(name){
 }
 
 
-/* =========================
+/* ========================================
    集計
-========================= */
+======================================== */
 
 function addFinal(
   context,
@@ -1311,7 +1421,9 @@ function addFinal(
   const key =
     itemKey(item);
 
-  if(!context.finals.has(key)){
+  if(
+    !context.finals.has(key)
+  ){
 
     context.finals.set(
       key,
@@ -1329,9 +1441,14 @@ function addFinal(
   const entry =
     context.finals.get(key);
 
-  entry.required += required;
-  entry.used += used;
-  entry.shortage += shortage;
+  entry.required +=
+    required;
+
+  entry.used +=
+    used;
+
+  entry.shortage +=
+    shortage;
 
   if(stopped){
     entry.stopped = true;
@@ -1353,281 +1470,670 @@ function addCraft(
   const key =
     itemKey(item);
 
-  if(!context.crafts.has(key)){
-
-    context.crafts.set(
-      key,
-      {
-        item,
-        recipe,
-        required:0,
-        used:0,
-        shortage:0,
-        runs:0
-      }
-    );
-
-  }
-
-  const entry =
-    context.crafts.get(key);
-
-  entry.required += required;
-  entry.used += used;
-  entry.shortage += shortage;
-  entry.runs += runs;
+  context.crafts.set(
+    key,
+    {
+      item,
+      recipe,
+      required,
+      used,
+      shortage,
+      runs
+    }
+  );
 
 }
 
 
-/* =========================
-   再帰展開
-========================= */
+/* ========================================
+   レシピグラフ作成
 
-async function expand(
+   同じアイテムは1ノードだけ作る。
+======================================== */
+
+async function buildGraph(
   item,
-  requested,
-  context,
-  ownedRemaining,
+  graph,
+  path=new Set(),
   depth=0,
-  chain=new Set(),
   isRoot=false
 ){
 
   const key =
     itemKey(item);
 
-  let used = 0;
-
-  /*
-    完成品は所持数を引かない。
-    素材・中間素材は所持数を消費する。
-  */
-  if(!isRoot){
-
-    const available =
-      Math.max(
-        0,
-        Number(
-          ownedRemaining.get(key) || 0
-        )
-      );
-
-    used =
-      Math.min(
-        requested,
-        available
-      );
-
-    ownedRemaining.set(
-      key,
-      available - used
-    );
-
-  }
-
-  const need =
-    Math.max(
-      0,
-      requested - used
-    );
-
-
-  /*
-    所持品だけで足りる場合
-  */
-  if(need <= 0){
-
-    return {
-      item,
-      requested,
-      used,
-      need:0,
-      covered:true,
-      leaf:true
-    };
-
-  }
-
-
-  /*
-    無限ループ防止
-  */
   if(
-    depth > 25 ||
-    chain.has(key)
+    graph.has(key)
   ){
 
-    addFinal(
-      context,
-      item,
-      requested,
-      used,
-      need
-    );
-
-    return {
-      item,
-      requested,
-      used,
-      need,
-      leaf:true
-    };
+    return key;
 
   }
 
+  const node = {
+    item,
+    recipe:null,
+    children:[],
+    cycle:false
+  };
 
-  const recipes =
-    await getRecipes(
-      item.name
+  graph.set(
+    key,
+    node
+  );
+
+  if(depth > 25){
+    return key;
+  }
+
+  let recipes = [];
+
+  try{
+
+    recipes =
+      await getRecipes(
+        item.name
+      );
+
+  }catch(error){
+
+    console.error(
+      "レシピ取得失敗",
+      item.name,
+      error
     );
 
-  const recipe =
+    return key;
+
+  }
+
+  node.recipe =
     recipes[0] || null;
 
-
-  /*
-    レシピなし＝最終素材
-  */
-  if(!recipe){
-
-    addFinal(
-      context,
-      item,
-      requested,
-      used,
-      need
-    );
-
-    return {
-      item,
-      requested,
-      used,
-      need,
-      leaf:true
-    };
-
+  if(!node.recipe){
+    return key;
   }
 
-
   /*
-    中間素材として一覧に登録
-  */
-  if(!isRoot){
-
-    const crafting =
-      shouldCraft(item);
-
-    const runs =
-      crafting
-        ? Math.ceil(
-            need / recipe.yield
-          )
-        : 0;
-
-    addCraft(
-      context,
-      item,
-      recipe,
-      requested,
-      used,
-      need,
-      runs
-    );
-
-  }
-
-
-  /*
-    自作OFF
+    完成品は必ず展開。
+    中間素材は自作OFFなら
+    それより先はグラフを作らない。
   */
   if(
     !isRoot &&
     !shouldCraft(item)
   ){
+    return key;
+  }
 
-    addFinal(
-      context,
-      item,
-      requested,
-      used,
-      need,
-      true
-    );
+  const nextPath =
+    new Set(path);
 
-    return {
-      item,
-      requested,
-      used,
-      need,
-      recipe,
-      stopped:true,
-      leaf:true
+  nextPath.add(key);
+
+  for(
+    const ingredient
+    of node.recipe.ingredients
+  ){
+
+    const childItem = {
+      id:ingredient.id,
+      name:ingredient.name
     };
 
-  }
+    const childKey =
+      itemKey(childItem);
 
+    const edge = {
+      key:childKey,
+      item:childItem,
+      amount:ingredient.amount,
+      cycle:false
+    };
 
-  const runs =
-    Math.ceil(
-      need / recipe.yield
-    );
+    if(
+      nextPath.has(childKey)
+    ){
 
-  const nextChain =
-    new Set(chain);
+      edge.cycle = true;
 
-  nextChain.add(key);
-
-  const children = [];
-
-  for(const ingredient of recipe.ingredients){
-
-    const amount =
-      ingredient.amount * runs;
-
-    const child =
-      await expand(
-
-        {
-          id:ingredient.id,
-          name:ingredient.name
-        },
-
-        amount,
-
-        context,
-
-        ownedRemaining,
-
-        depth + 1,
-
-        nextChain,
-
-        false
-
+      node.children.push(
+        edge
       );
 
-    children.push(child);
+      continue;
+
+    }
+
+    node.children.push(
+      edge
+    );
+
+    await buildGraph(
+      childItem,
+      graph,
+      nextPath,
+      depth + 1,
+      false
+    );
 
   }
 
+  return key;
+
+}
+
+
+/* ========================================
+   集約計算
+
+   親全部の必要数が集まってから
+   そのアイテムの製作回数を決める。
+======================================== */
+
+function calculateGraph(
+  graph,
+  rootKey,
+  targetAmount
+){
+
+  const context = {
+    finals:new Map(),
+    crafts:new Map()
+  };
+
+  const states =
+    new Map();
+
+  const required =
+    new Map();
+
+  const indegree =
+    new Map();
+
+  const ownedRemaining =
+    new Map();
+
+
+  /*
+    所持数を計算用にコピー
+  */
+  for(
+    const [key,value]
+    of Object.entries(owned)
+  ){
+
+    ownedRemaining.set(
+      key,
+      Math.max(
+        0,
+        Number(value) || 0
+      )
+    );
+
+  }
+
+
+  /*
+    入次数
+  */
+  for(
+    const key
+    of graph.keys()
+  ){
+
+    indegree.set(
+      key,
+      0
+    );
+
+  }
+
+  for(
+    const node
+    of graph.values()
+  ){
+
+    for(
+      const edge
+      of node.children
+    ){
+
+      if(edge.cycle){
+        continue;
+      }
+
+      indegree.set(
+        edge.key,
+        (
+          indegree.get(edge.key) || 0
+        ) + 1
+      );
+
+    }
+
+  }
+
+
+  required.set(
+    rootKey,
+    targetAmount
+  );
+
+
+  const queue = [];
+
+  for(
+    const [key,count]
+    of indegree.entries()
+  ){
+
+    if(count === 0){
+      queue.push(key);
+    }
+
+  }
+
+
+  while(queue.length){
+
+    const key =
+      queue.shift();
+
+    const node =
+      graph.get(key);
+
+    if(!node){
+      continue;
+    }
+
+    const isRoot =
+      key === rootKey;
+
+    const requested =
+      Math.max(
+        0,
+        Number(
+          required.get(key) || 0
+        )
+      );
+
+
+    /*
+      このアイテムが実際には
+      不要だった場合でも
+      子の入次数は開放する。
+    */
+    if(requested <= 0){
+
+      states.set(
+        key,
+        {
+          item:node.item,
+          requested:0,
+          used:0,
+          need:0,
+          runs:0,
+          recipe:node.recipe,
+          leaf:true,
+          covered:false,
+          stopped:false
+        }
+      );
+
+      releaseChildren(
+        node,
+        indegree,
+        queue
+      );
+
+      continue;
+
+    }
+
+
+    let used = 0;
+
+
+    /*
+      完成品自体の所持数は
+      今まで通り差し引かない。
+    */
+    if(!isRoot){
+
+      const available =
+        Math.max(
+          0,
+          Number(
+            ownedRemaining.get(key) || 0
+          )
+        );
+
+      used =
+        Math.min(
+          requested,
+          available
+        );
+
+      ownedRemaining.set(
+        key,
+        available - used
+      );
+
+    }
+
+
+    const need =
+      Math.max(
+        0,
+        requested - used
+      );
+
+
+    /*
+      所持だけで充足
+    */
+    if(need <= 0){
+
+      states.set(
+        key,
+        {
+          item:node.item,
+          requested,
+          used,
+          need:0,
+          runs:0,
+          recipe:node.recipe,
+          leaf:true,
+          covered:true,
+          stopped:false
+        }
+      );
+
+      releaseChildren(
+        node,
+        indegree,
+        queue
+      );
+
+      continue;
+
+    }
+
+
+    /*
+      レシピなし
+    */
+    if(!node.recipe){
+
+      addFinal(
+        context,
+        node.item,
+        requested,
+        used,
+        need
+      );
+
+      states.set(
+        key,
+        {
+          item:node.item,
+          requested,
+          used,
+          need,
+          runs:0,
+          recipe:null,
+          leaf:true,
+          covered:false,
+          stopped:false
+        }
+      );
+
+      releaseChildren(
+        node,
+        indegree,
+        queue
+      );
+
+      continue;
+
+    }
+
+
+    /*
+      自作OFF
+    */
+    if(
+      !isRoot &&
+      !shouldCraft(node.item)
+    ){
+
+      addCraft(
+        context,
+        node.item,
+        node.recipe,
+        requested,
+        used,
+        need,
+        0
+      );
+
+      addFinal(
+        context,
+        node.item,
+        requested,
+        used,
+        need,
+        true
+      );
+
+      states.set(
+        key,
+        {
+          item:node.item,
+          requested,
+          used,
+          need,
+          runs:0,
+          recipe:node.recipe,
+          leaf:true,
+          covered:false,
+          stopped:true
+        }
+      );
+
+      releaseChildren(
+        node,
+        indegree,
+        queue
+      );
+
+      continue;
+
+    }
+
+
+    /*
+      ここで初めて、
+      合算された必要数から
+      製作回数を決める。
+    */
+    const runs =
+      Math.ceil(
+        need /
+        node.recipe.yield
+      );
+
+
+    if(!isRoot){
+
+      addCraft(
+        context,
+        node.item,
+        node.recipe,
+        requested,
+        used,
+        need,
+        runs
+      );
+
+    }
+
+
+    states.set(
+      key,
+      {
+        item:node.item,
+        requested,
+        used,
+        need,
+        runs,
+        recipe:node.recipe,
+        leaf:false,
+        covered:false,
+        stopped:false
+      }
+    );
+
+
+    /*
+      子素材へ必要数を伝える
+    */
+    for(
+      const edge
+      of node.children
+    ){
+
+      const childRequired =
+        edge.amount * runs;
+
+
+      /*
+        万一循環レシピがあった場合は
+        そこで最終素材扱いにして止める。
+      */
+      if(edge.cycle){
+
+        const childKey =
+          edge.key;
+
+        const available =
+          Math.max(
+            0,
+            Number(
+              ownedRemaining.get(childKey) || 0
+            )
+          );
+
+        const cycleUsed =
+          Math.min(
+            childRequired,
+            available
+          );
+
+        ownedRemaining.set(
+          childKey,
+          available - cycleUsed
+        );
+
+        const cycleShortage =
+          childRequired - cycleUsed;
+
+        addFinal(
+          context,
+          edge.item,
+          childRequired,
+          cycleUsed,
+          cycleShortage
+        );
+
+        continue;
+
+      }
+
+
+      required.set(
+        edge.key,
+        (
+          required.get(edge.key) || 0
+        ) + childRequired
+      );
+
+    }
+
+
+    releaseChildren(
+      node,
+      indegree,
+      queue
+    );
+
+  }
+
+
   return {
-    item,
-    requested,
-    used,
-    need,
-    recipe,
-    runs,
-    leaf:false,
-    children
+    context,
+    states
   };
 
 }
 
 
-/* =========================
+/* ========================================
+   子ノード開放
+======================================== */
+
+function releaseChildren(
+  node,
+  indegree,
+  queue
+){
+
+  const released =
+    new Set();
+
+  for(
+    const edge
+    of node.children
+  ){
+
+    if(
+      edge.cycle ||
+      released.has(edge.key)
+    ){
+      continue;
+    }
+
+    released.add(
+      edge.key
+    );
+
+    const next =
+      (
+        indegree.get(edge.key) || 0
+      ) - 1;
+
+    indegree.set(
+      edge.key,
+      next
+    );
+
+    if(next === 0){
+
+      queue.push(
+        edge.key
+      );
+
+    }
+
+  }
+
+}
+
+
+/* ========================================
    計算
-========================= */
+======================================== */
 
 async function calculate(){
 
@@ -1657,55 +2163,48 @@ async function calculate(){
 
   try{
 
-    const context = {
-      finals:new Map(),
-      crafts:new Map()
-    };
-
-    /*
-      所持数を計算ごとにコピー。
-      同じ素材が複数箇所に出ても
-      所持品を二重使用しない。
-    */
-    const ownedRemaining =
+    const graph =
       new Map();
 
-    for(
-      const [key,value]
-      of Object.entries(owned)
-    ){
-
-      ownedRemaining.set(
-        key,
-        Math.max(
-          0,
-          Number(value) || 0
-        )
-      );
-
-    }
-
-    const tree =
-      await expand(
+    const rootKey =
+      await buildGraph(
         selectedItem,
-        amount,
-        context,
-        ownedRemaining,
-        0,
+        graph,
         new Set(),
+        0,
         true
       );
+
+    const {
+      context,
+      states
+    } =
+      calculateGraph(
+        graph,
+        rootKey,
+        amount
+      );
+
 
     renderSidebar(
       context,
       amount
     );
 
+
+    const rendered =
+      new Set();
+
     treeScroll.innerHTML =
       treeHTML(
-        tree,
-        true
+        rootKey,
+        graph,
+        states,
+        rendered,
+        true,
+        null
       );
+
 
     setStatus(
       "計算完了",
@@ -1732,9 +2231,9 @@ async function calculate(){
 }
 
 
-/* =========================
+/* ========================================
    左パネル
-========================= */
+======================================== */
 
 function renderSidebar(
   context,
@@ -1774,14 +2273,10 @@ function renderSidebar(
 
         <div class="card-head">
 
-          <div>
-
-            <div class="item-name">
-              ${escapeHTML(
-                selectedItem.name
-              )}
-            </div>
-
+          <div class="item-name">
+            ${escapeHTML(
+              selectedItem.name
+            )}
           </div>
 
           <div class="need-number">
@@ -1802,108 +2297,116 @@ function renderSidebar(
       </h3>
 
       <div class="hint">
+
+        同じ中間素材は全ルート分を
+        合算してから製作回数を計算します。<br>
+
         所持数は自動で差し引きます。<br>
+
         「自作する」をOFFにすると、
         その素材より先を展開しません。
+
       </div>
 
       ${
         crafts.length
 
-        ? crafts.map(craft => {
+        ? crafts.map(
+          craft => {
 
-          const key =
-            itemKey(
-              craft.item
-            );
+            const key =
+              itemKey(
+                craft.item
+              );
 
-          return `
+            return `
 
-            <div class="craft-card">
+              <div class="craft-card">
 
-              <div class="card-head">
+                <div class="card-head">
 
-                <div>
+                  <div>
 
-                  <div class="item-name">
+                    <div class="item-name">
 
-                    ${escapeHTML(
-                      craft.item.name
-                    )}
+                      ${escapeHTML(
+                        craft.item.name
+                      )}
+
+                    </div>
+
+                    <div class="small">
+
+                      ${escapeHTML(
+                        craft.recipe.craft
+                      )}
+
+                      ${
+                        craft.recipe.level
+                          ? ` Lv${craft.recipe.level}`
+                          : ""
+                      }
+
+                      ${
+                        craft.runs
+                          ? ` / ${craft.runs}回製作`
+                          : ""
+                      }
+
+                    </div>
 
                   </div>
 
-                  <div class="small">
+                  <div class="need-number">
 
-                    ${escapeHTML(
-                      craft.recipe.craft
-                    )}
-
-                    ${
-                      craft.recipe.level
-                        ? ` Lv${craft.recipe.level}`
-                        : ""
-                    }
-
-                    ${
-                      craft.runs
-                        ? ` / ${craft.runs}回製作`
-                        : ""
-                    }
+                    必要 ${craft.required}
 
                   </div>
 
                 </div>
 
-                <div class="need-number">
 
-                  必要 ${craft.required}
+                <div class="craft-controls">
 
-                </div>
-
-              </div>
-
-
-              <div class="craft-controls">
-
-                <span class="small">
-                  所持数
-                </span>
-
-                <input
-                  class="owned-input"
-                  data-key="${escapeHTML(key)}"
-                  type="number"
-                  min="0"
-                  inputmode="numeric"
-                  value="${ownedQty(craft.item)}"
-                >
-
-
-                <label class="checkbox-row">
+                  <span class="small">
+                    所持数
+                  </span>
 
                   <input
-                    class="craft-toggle"
+                    class="owned-input"
                     data-key="${escapeHTML(key)}"
-                    type="checkbox"
-                    ${
-                      shouldCraft(craft.item)
-                        ? "checked"
-                        : ""
-                    }
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="${ownedQty(craft.item)}"
                   >
 
-                  自作する
 
-                </label>
+                  <label class="checkbox-row">
+
+                    <input
+                      class="craft-toggle"
+                      data-key="${escapeHTML(key)}"
+                      type="checkbox"
+                      ${
+                        shouldCraft(craft.item)
+                          ? "checked"
+                          : ""
+                      }
+                    >
+
+                    自作する
+
+                  </label>
+
+                </div>
 
               </div>
 
-            </div>
+            `;
 
-          `;
-
-        }).join("")
+          }
+        ).join("")
 
         : `
 
@@ -1935,72 +2438,77 @@ function renderSidebar(
       ${
         finals.length
 
-        ? finals.map(material => {
+        ? finals.map(
+          material => {
 
-          const key =
-            itemKey(
-              material.item
-            );
+            const key =
+              itemKey(
+                material.item
+              );
 
-          const shortageClass =
-            material.shortage === 0
-              ? "enough"
-              : "shortage";
+            const shortageClass =
+              material.shortage === 0
+                ? "enough"
+                : "shortage";
 
-          return `
+            return `
 
-            <div class="material-grid">
-
-              <div>
+              <div class="material-grid">
 
                 <div>
-                  ${escapeHTML(
-                    material.item.name
-                  )}
+
+                  <div>
+                    ${escapeHTML(
+                      material.item.name
+                    )}
+                  </div>
+
+                  ${
+                    material.stopped
+                      ? `
+                        <div class="small">
+                          自作しない
+                        </div>
+                      `
+                      : ""
+                  }
+
                 </div>
 
-                ${
-                  material.stopped
-                    ? `
-                      <div class="small">
-                        自作しない
-                      </div>
-                    `
-                    : ""
-                }
+                <div class="number required">
+                  ${material.required}
+                </div>
+
+                <div>
+
+                  <input
+                    class="owned-input"
+                    data-key="${escapeHTML(key)}"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="${ownedQty(material.item)}"
+                  >
+
+                </div>
+
+                <div class="number ${shortageClass}">
+                  ${material.shortage}
+                </div>
 
               </div>
 
-              <div class="number required">
-                ${material.required}
-              </div>
+            `;
 
-              <div>
-
-                <input
-                  class="owned-input"
-                  data-key="${escapeHTML(key)}"
-                  type="number"
-                  min="0"
-                  inputmode="numeric"
-                  value="${ownedQty(material.item)}"
-                >
-
-              </div>
-
-              <div class="number ${shortageClass}">
-                ${material.shortage}
-              </div>
-
-            </div>
-
-          `;
-
-        }).join("")
+          }
+        ).join("")
 
         : `
 
-          <div class="hint" style="padding:12px 0">
+          <div
+            class="hint"
+            style="padding:12px 0"
+          >
 
             必要素材はありません
 
@@ -2019,14 +2527,47 @@ function renderSidebar(
 }
 
 
-/* =========================
-   ツリー表示
-========================= */
+/* ========================================
+   ツリー
+======================================== */
 
 function treeHTML(
-  node,
-  isRoot=false
+  key,
+  graph,
+  states,
+  rendered,
+  isRoot=false,
+  contribution=null
 ){
+
+  const node =
+    graph.get(key);
+
+  const state =
+    states.get(key);
+
+  if(
+    !node ||
+    !state
+  ){
+    return "";
+  }
+
+  if(
+    state.requested <= 0 &&
+    !isRoot
+  ){
+    return "";
+  }
+
+
+  const shared =
+    rendered.has(key);
+
+  if(!shared){
+    rendered.add(key);
+  }
+
 
   let className =
     "tree-card";
@@ -2035,47 +2576,67 @@ function treeHTML(
     className += " root";
   }
 
-  if(node.leaf){
+  if(state.leaf){
     className += " leaf";
   }
 
-  if(node.stopped){
+  if(state.stopped){
     className += " stopped";
   }
 
-  if(node.covered){
+  if(state.covered){
     className += " covered";
+  }
+
+  if(shared){
+    className += " shared";
   }
 
 
   let info = "";
 
 
-  if(node.covered){
+  if(
+    contribution !== null &&
+    contribution !== state.requested
+  ){
+
+    info += `
+
+      <div class="tree-info">
+        この枝から ${contribution}
+      </div>
+
+    `;
+
+  }
+
+
+  if(state.covered){
 
     info += `
 
       <div class="tree-info tree-good">
-        所持品で充足
+        所持 ${state.used} で充足
       </div>
 
     `;
 
   }else{
 
-    if(node.used > 0){
+    if(state.used > 0){
 
       info += `
 
         <div class="tree-info">
-          所持 ${node.used} 使用
+          所持 ${state.used} 使用
         </div>
 
       `;
 
     }
 
-    if(node.stopped){
+    if(state.stopped){
 
       info += `
 
@@ -2086,14 +2647,14 @@ function treeHTML(
       `;
 
     }else if(
-      !node.leaf &&
-      node.runs
+      !state.leaf &&
+      state.runs
     ){
 
       info += `
 
         <div class="tree-info">
-          ${node.runs}回製作
+          ${state.runs}回製作
         </div>
 
       `;
@@ -2103,18 +2664,35 @@ function treeHTML(
   }
 
 
+  if(shared){
+
+    info += `
+
+      <div class="tree-info tree-shared">
+        共通素材・合算済み
+      </div>
+
+    `;
+
+  }
+
+
   const card = `
 
     <div class="${className}">
 
       <div class="tree-name">
+
         ${escapeHTML(
           node.item.name
         )}
+
       </div>
 
       <div class="tree-amount">
-        × ${node.requested}
+
+        × ${state.requested}
+
       </div>
 
       ${info}
@@ -2124,9 +2702,26 @@ function treeHTML(
   `;
 
 
+  /*
+    2回目以降の同じ素材は
+    カードだけ出して先は展開しない。
+  */
+  if(shared){
+
+    return `
+
+      <div class="tree-node">
+        ${card}
+      </div>
+
+    `;
+
+  }
+
+
   if(
-    node.leaf ||
-    !node.children ||
+    state.leaf ||
+    !state.runs ||
     !node.children.length
   ){
 
@@ -2141,6 +2736,86 @@ function treeHTML(
   }
 
 
+  const childrenHTML =
+    node.children
+    .map(
+      edge => {
+
+        if(edge.cycle){
+
+          return `
+
+            <div class="tree-child">
+
+              <div class="tree-node">
+
+                <div class="tree-card leaf">
+
+                  <div class="tree-name">
+                    ${escapeHTML(
+                      edge.item.name
+                    )}
+                  </div>
+
+                  <div class="tree-amount">
+                    × ${edge.amount * state.runs}
+                  </div>
+
+                  <div class="tree-info">
+                    循環防止のため展開停止
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+
+
+        const childState =
+          states.get(
+            edge.key
+          );
+
+        if(
+          !childState ||
+          childState.requested <= 0
+        ){
+          return "";
+        }
+
+
+        const contribution =
+          edge.amount *
+          state.runs;
+
+
+        return `
+
+          <div class="tree-child">
+
+            ${treeHTML(
+              edge.key,
+              graph,
+              states,
+              rendered,
+              false,
+              contribution
+            )}
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join("");
+
+
   return `
 
     <div class="tree-node">
@@ -2149,22 +2824,7 @@ function treeHTML(
 
       <div class="tree-children">
 
-        ${
-          node.children.map(
-            child => `
-
-              <div class="tree-child">
-
-                ${treeHTML(
-                  child,
-                  false
-                )}
-
-              </div>
-
-            `
-          ).join("")
-        }
+        ${childrenHTML}
 
       </div>
 
@@ -2175,9 +2835,9 @@ function treeHTML(
 }
 
 
-/* =========================
+/* ========================================
    左パネル操作
-========================= */
+======================================== */
 
 function bindSidebarEvents(){
 
@@ -2185,66 +2845,70 @@ function bindSidebarEvents(){
     .querySelectorAll(
       ".owned-input"
     )
-    .forEach(input => {
+    .forEach(
+      input => {
 
-      input.addEventListener(
-        "change",
-        () => {
+        input.addEventListener(
+          "change",
+          () => {
 
-          const key =
-            input.dataset.key;
+            const key =
+              input.dataset.key;
 
-          owned[key] =
-            Math.max(
-              0,
-              Math.floor(
-                Number(
-                  input.value
-                ) || 0
-              )
-            );
+            owned[key] =
+              Math.max(
+                0,
+                Math.floor(
+                  Number(
+                    input.value
+                  ) || 0
+                )
+              );
 
-          saveSettings();
+            saveSettings();
 
-          calculate();
+            calculate();
 
-        }
-      );
+          }
+        );
 
-    });
+      }
+    );
 
 
   sidebar
     .querySelectorAll(
       ".craft-toggle"
     )
-    .forEach(input => {
+    .forEach(
+      input => {
 
-      input.addEventListener(
-        "change",
-        () => {
+        input.addEventListener(
+          "change",
+          () => {
 
-          const key =
-            input.dataset.key;
+            const key =
+              input.dataset.key;
 
-          craftMode[key] =
-            input.checked;
+            craftMode[key] =
+              input.checked;
 
-          saveSettings();
+            saveSettings();
 
-          calculate();
+            calculate();
 
-        }
-      );
+          }
+        );
 
-    });
+      }
+    );
 
 }
 
 
-/* =========================
-   リセット
-========================= */
+/* ========================================
+   解除
+======================================== */
 
 function clearSelection(){
 
@@ -2257,6 +2921,7 @@ function clearSelection(){
   selectedBox.style.display =
     "none";
 
+
   sidebar.innerHTML = `
 
     <div class="empty">
@@ -2268,6 +2933,7 @@ function clearSelection(){
 
   `;
 
+
   treeScroll.innerHTML = `
 
     <div class="empty">
@@ -2276,6 +2942,7 @@ function clearSelection(){
 
   `;
 
+
   setStatus(
     "アイテム名を2文字以上入力してください"
   );
@@ -2283,9 +2950,9 @@ function clearSelection(){
 }
 
 
-/* =========================
+/* ========================================
    イベント
-========================= */
+======================================== */
 
 searchButton.addEventListener(
   "click",
