@@ -45,7 +45,8 @@ body{
 }
 
 button,
-input{
+input,
+select{
   font:inherit;
 }
 
@@ -79,7 +80,8 @@ button.danger{
   border:1px solid #7d4148;
 }
 
-input{
+input,
+select{
   border:1px solid #47576d;
   background:#0d131b;
   color:white;
@@ -87,7 +89,8 @@ input{
   padding:9px 10px;
 }
 
-input:focus{
+input:focus,
+select:focus{
   outline:2px solid rgba(223,178,95,.28);
   border-color:var(--gold);
 }
@@ -120,6 +123,42 @@ input:focus{
   margin-bottom:12px;
 }
 
+
+/* =========================
+   検索方法タブ
+========================= */
+
+.search-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:10px;
+}
+
+.search-tab{
+  background:#293546;
+  color:var(--text);
+  border:1px solid var(--line);
+}
+
+.search-tab.active{
+  background:var(--gold);
+  color:#1b150b;
+  border-color:var(--gold);
+}
+
+.search-pane{
+  display:none;
+}
+
+.search-pane.active{
+  display:block;
+}
+
+
+/* =========================
+   名前検索
+========================= */
+
 .search-row{
   display:flex;
   gap:8px;
@@ -147,12 +186,50 @@ input:focus{
 
 
 /* =========================
-   検索候補
+   レシピ検索
+========================= */
+
+.recipe-controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.recipe-controls select{
+  min-width:150px;
+}
+
+.level-group{
+  display:flex;
+  gap:5px;
+  align-items:center;
+}
+
+.level-group input{
+  width:80px;
+  text-align:center;
+}
+
+.level-label{
+  color:var(--sub);
+  font-size:12px;
+}
+
+.recipe-help{
+  margin-top:6px;
+  color:var(--sub);
+  font-size:11px;
+}
+
+
+/* =========================
+   候補
 ========================= */
 
 .candidates{
   margin-top:7px;
-  max-height:240px;
+  max-height:260px;
   overflow:auto;
 }
 
@@ -168,6 +245,20 @@ input:focus{
 .candidate:hover{
   border-color:#667990;
   background:#273343;
+}
+
+.candidate-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.candidate-level{
+  flex:none;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
 }
 
 .item-name{
@@ -240,13 +331,13 @@ input:focus{
   border-right:1px solid var(--line);
   padding:14px;
   overflow-y:auto;
-  height:calc(100vh - 150px);
+  height:calc(100vh - 180px);
 }
 
 .main{
   min-width:0;
   padding:14px;
-  height:calc(100vh - 150px);
+  height:calc(100vh - 180px);
   overflow:hidden;
 }
 
@@ -532,6 +623,32 @@ input:focus{
     font-size:18px;
   }
 
+  .search-tabs{
+    width:100%;
+  }
+
+  .search-tab{
+    flex:1;
+  }
+
+  .recipe-controls{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .recipe-controls select{
+    width:100%;
+  }
+
+  .level-group{
+    width:100%;
+  }
+
+  .level-group input{
+    flex:1;
+    width:auto;
+  }
+
   .selected-row{
     flex-wrap:wrap;
   }
@@ -620,11 +737,41 @@ input:focus{
 <div class="app">
 
 <header class="header">
-  <div class="header-inner">
 
-    <div class="title">
-      FF14 製作素材ツール
-    </div>
+<div class="header-inner">
+
+  <div class="title">
+    FF14 製作素材ツール
+  </div>
+
+
+  <div class="search-tabs">
+
+    <button
+      id="nameTab"
+      class="search-tab active"
+    >
+      名前から検索
+    </button>
+
+    <button
+      id="recipeTab"
+      class="search-tab"
+    >
+      レシピから選ぶ
+    </button>
+
+  </div>
+
+
+  <!-- =====================
+       名前検索
+  ====================== -->
+
+  <div
+    id="namePane"
+    class="search-pane active"
+  >
 
     <div class="search-row">
 
@@ -641,124 +788,230 @@ input:focus{
 
     </div>
 
-    <div id="status" class="status">
-      アイテム名を2文字以上入力してください
-    </div>
+  </div>
 
-    <div
-      id="candidates"
-      class="candidates"
-    ></div>
 
-    <div
-      id="selected"
-      class="selected"
-    >
+  <!-- =====================
+       レシピ検索
+  ====================== -->
 
-      <div class="selected-row">
+  <div
+    id="recipePane"
+    class="search-pane"
+  >
 
-        <div class="selected-info">
+    <div class="recipe-controls">
 
-          <div
-            id="selectedName"
-            class="item-name"
-          ></div>
+      <select id="craftSelect">
 
-          <div
-            id="selectedDetail"
-            class="small"
-          ></div>
+        <option value="木工">
+          木工師
+        </option>
 
-        </div>
+        <option value="鍛冶">
+          鍛冶師
+        </option>
 
-        <div class="qty-wrap">
+        <option value="甲冑">
+          甲冑師
+        </option>
 
-          <span class="qty-label">
-            作る個数
-          </span>
+        <option value="彫金">
+          彫金師
+        </option>
 
-          <input
-            id="qtyInput"
-            type="number"
-            min="1"
-            inputmode="numeric"
-            value="1"
-            title="作りたい個数"
-          >
+        <option value="革細工">
+          革細工師
+        </option>
 
-        </div>
+        <option value="裁縫">
+          裁縫師
+        </option>
 
-        <button id="calculateButton">
-          計算
-        </button>
+        <option value="錬金">
+          錬金術師
+        </option>
 
-        <button
-          id="resetOwnedButton"
-          class="danger"
+        <option value="調理">
+          調理師
+        </option>
+
+      </select>
+
+
+      <div class="level-group">
+
+        <span class="level-label">
+          Lv
+        </span>
+
+        <input
+          id="minLevel"
+          type="number"
+          min="1"
+          max="100"
+          value="1"
         >
-          所持数をすべて0
-        </button>
 
-        <button
-          id="clearButton"
-          class="secondary"
+        <span>
+          ～
+        </span>
+
+        <input
+          id="maxLevel"
+          type="number"
+          min="1"
+          max="100"
+          value="100"
         >
-          解除
-        </button>
 
       </div>
+
+
+      <button id="recipeSearchButton">
+        レシピ一覧
+      </button>
+
+    </div>
+
+
+    <div class="recipe-help">
+      製作クラスとレベル帯を選んで一覧表示
+    </div>
+
+  </div>
+
+
+  <div
+    id="status"
+    class="status"
+  >
+    アイテム名を2文字以上入力してください
+  </div>
+
+
+  <div
+    id="candidates"
+    class="candidates"
+  ></div>
+
+
+  <div
+    id="selected"
+    class="selected"
+  >
+
+    <div class="selected-row">
+
+      <div class="selected-info">
+
+        <div
+          id="selectedName"
+          class="item-name"
+        ></div>
+
+        <div
+          id="selectedDetail"
+          class="small"
+        ></div>
+
+      </div>
+
+
+      <div class="qty-wrap">
+
+        <span class="qty-label">
+          作る個数
+        </span>
+
+        <input
+          id="qtyInput"
+          type="number"
+          min="1"
+          inputmode="numeric"
+          value="1"
+        >
+
+      </div>
+
+
+      <button id="calculateButton">
+        計算
+      </button>
+
+
+      <button
+        id="resetOwnedButton"
+        class="danger"
+      >
+        所持数をすべて0
+      </button>
+
+
+      <button
+        id="clearButton"
+        class="secondary"
+      >
+        解除
+      </button>
 
     </div>
 
   </div>
+
+</div>
+
 </header>
 
 
 <div class="workspace">
 
-  <aside
-    id="sidebar"
-    class="sidebar"
-  >
 
-    <div class="empty">
-      アイテムを検索して<br>
-      製作素材を計算してください
-    </div>
+<aside
+  id="sidebar"
+  class="sidebar"
+>
 
-  </aside>
+  <div class="empty">
+    アイテムを検索して<br>
+    製作素材を計算してください
+  </div>
+
+</aside>
 
 
-  <main class="main">
+<main class="main">
 
-    <div class="tree-panel">
+  <div class="tree-panel">
 
-      <div class="tree-toolbar">
+    <div class="tree-toolbar">
 
-        <div class="tree-toolbar-title">
-          素材ツリー
-        </div>
-
-        <div class="tree-toolbar-info">
-          PC：左 → 右　／　スマホ：上 → 下
-        </div>
-
+      <div class="tree-toolbar-title">
+        素材ツリー
       </div>
 
-      <div
-        id="treeScroll"
-        class="tree-scroll"
-      >
-
-        <div class="empty">
-          ここに素材ツリーが表示されます
-        </div>
-
+      <div class="tree-toolbar-info">
+        PC：左 → 右　／　スマホ：上 → 下
       </div>
 
     </div>
 
-  </main>
+
+    <div
+      id="treeScroll"
+      class="tree-scroll"
+    >
+
+      <div class="empty">
+        ここに素材ツリーが表示されます
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
 
 </div>
 
@@ -770,9 +1023,30 @@ input:focus{
 
 "use strict";
 
+
 const API =
   "https://v2.xivapi.com/api";
 
+
+const nameTab =
+  document.getElementById(
+    "nameTab"
+  );
+
+const recipeTab =
+  document.getElementById(
+    "recipeTab"
+  );
+
+const namePane =
+  document.getElementById(
+    "namePane"
+  );
+
+const recipePane =
+  document.getElementById(
+    "recipePane"
+  );
 
 const searchInput =
   document.getElementById(
@@ -782,6 +1056,26 @@ const searchInput =
 const searchButton =
   document.getElementById(
     "searchButton"
+  );
+
+const craftSelect =
+  document.getElementById(
+    "craftSelect"
+  );
+
+const minLevel =
+  document.getElementById(
+    "minLevel"
+  );
+
+const maxLevel =
+  document.getElementById(
+    "maxLevel"
+  );
+
+const recipeSearchButton =
+  document.getElementById(
+    "recipeSearchButton"
   );
 
 const status =
@@ -840,9 +1134,12 @@ const treeScroll =
   );
 
 
-let selectedItem = null;
+let selectedItem =
+  null;
 
-let searchTimer = null;
+let searchTimer =
+  null;
+
 
 const recipeCache =
   new Map();
@@ -919,6 +1216,7 @@ function saveSettings(){
 
 }
 
+
 loadSettings();
 
 
@@ -930,7 +1228,8 @@ function escapeHTML(value){
 
   return String(
     value ?? ""
-  ).replace(
+  )
+  .replace(
     /[&<>"']/g,
     character => ({
       "&":"&amp;",
@@ -947,40 +1246,33 @@ function escapeHTML(value){
 function escapeQuery(value){
 
   return String(value)
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-    .replace(
-      /"/g,
-      '\\"'
-    );
+  .replace(
+    /\\/g,
+    "\\\\"
+  )
+  .replace(
+    /"/g,
+    '\\"'
+  );
 
 }
 
 
-/*
-  ひらがな → カタカナ
+/* ひらがな → カタカナ */
 
-  例
-  こばるとくろー
-      ↓
-  コバルトクロー
-*/
 function hiraganaToKatakana(
   value
 ){
 
   return String(value)
-    .replace(
-      /[\u3041-\u3096]/g,
-      character =>
-        String.fromCharCode(
-          character.charCodeAt(0)
-          +
-          0x60
-        )
-    );
+  .replace(
+    /[\u3041-\u3096]/g,
+    character =>
+      String.fromCharCode(
+        character.charCodeAt(0)
+        + 0x60
+      )
+  );
 
 }
 
@@ -1052,7 +1344,58 @@ function setStatus(
 
 
 /* ========================================
-   XIVAPI
+   タブ
+======================================== */
+
+function showSearchMode(
+  mode
+){
+
+  const nameMode =
+    mode === "name";
+
+  nameTab.classList.toggle(
+    "active",
+    nameMode
+  );
+
+  recipeTab.classList.toggle(
+    "active",
+    !nameMode
+  );
+
+  namePane.classList.toggle(
+    "active",
+    nameMode
+  );
+
+  recipePane.classList.toggle(
+    "active",
+    !nameMode
+  );
+
+  candidates.innerHTML =
+    "";
+
+  if(nameMode){
+
+    setStatus(
+      "アイテム名を2文字以上入力してください"
+    );
+
+  }else{
+
+    setStatus(
+      "製作クラスとレベル帯を選んでください"
+    );
+
+  }
+
+}
+
+
+/* ========================================
+   API
 ======================================== */
 
 async function api(
@@ -1064,6 +1407,7 @@ async function api(
     new URL(
       API + path
     );
+
 
   for(
     const [key,value]
@@ -1087,10 +1431,12 @@ async function api(
 
   }
 
+
   const response =
     await fetch(
       url.toString()
     );
+
 
   if(
     !response.ok
@@ -1103,20 +1449,22 @@ async function api(
 
   }
 
+
   return response.json();
 
 }
 
 
 /* ========================================
-   アイテム検索
+   名前検索
 ======================================== */
 
 async function searchItems(){
 
   const originalWord =
     searchInput.value
-      .trim();
+    .trim();
+
 
   if(
     originalWord.length < 2
@@ -1134,13 +1482,6 @@ async function searchItems(){
   }
 
 
-  /*
-    検索時だけひらがなを
-    カタカナへ変換する。
-
-    検索欄に入力した文字自体は
-    書き換えない。
-  */
   const word =
     hiraganaToKatakana(
       originalWord
@@ -1153,6 +1494,7 @@ async function searchItems(){
       : `「${word}」として検索中…`
   );
 
+
   candidates.innerHTML =
     "";
 
@@ -1164,17 +1506,13 @@ async function searchItems(){
         "/search",
         {
 
-          sheets:
-            "Item",
+          sheets:"Item",
 
-          fields:
-            "Name",
+          fields:"Name",
 
-          language:
-            "ja",
+          language:"ja",
 
-          limit:
-            20,
+          limit:20,
 
           query:
             `Name~"${escapeQuery(
@@ -1209,77 +1547,9 @@ async function searchItems(){
       );
 
 
-    if(
-      !items.length
-    ){
-
-      setStatus(
-        "該当するアイテムが見つかりませんでした"
-      );
-
-      return;
-
-    }
-
-
-    setStatus(
-      `${items.length}件見つかりました`
+    renderItemCandidates(
+      items
     );
-
-
-    candidates.innerHTML =
-      items.map(
-        (item,index) => `
-
-          <div
-            class="candidate"
-            data-index="${index}"
-          >
-
-            <div class="item-name">
-              ${escapeHTML(
-                item.name
-              )}
-            </div>
-
-            <div class="small">
-              Item ID: ${item.id}
-            </div>
-
-          </div>
-
-        `
-      ).join("");
-
-
-    candidates
-      .querySelectorAll(
-        ".candidate"
-      )
-      .forEach(
-        element => {
-
-          element
-            .addEventListener(
-              "click",
-              () => {
-
-                const index =
-                  Number(
-                    element
-                      .dataset
-                      .index
-                  );
-
-                chooseItem(
-                  items[index]
-                );
-
-              }
-            );
-
-        }
-      );
 
 
   }catch(error){
@@ -1300,6 +1570,556 @@ async function searchItems(){
 
 
 /* ========================================
+   通常検索候補
+======================================== */
+
+function renderItemCandidates(
+  items
+){
+
+  if(
+    !items.length
+  ){
+
+    candidates.innerHTML =
+      "";
+
+    setStatus(
+      "該当するアイテムが見つかりませんでした"
+    );
+
+    return;
+
+  }
+
+
+  setStatus(
+    `${items.length}件見つかりました`
+  );
+
+
+  candidates.innerHTML =
+    items.map(
+      (item,index) => `
+
+        <div
+          class="candidate"
+          data-item-index="${index}"
+        >
+
+          <div class="item-name">
+            ${escapeHTML(
+              item.name
+            )}
+          </div>
+
+          <div class="small">
+            Item ID: ${item.id}
+          </div>
+
+        </div>
+
+      `
+    )
+    .join("");
+
+
+  candidates
+  .querySelectorAll(
+    "[data-item-index]"
+  )
+  .forEach(
+    element => {
+
+      element
+      .addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              element.dataset
+              .itemIndex
+            );
+
+          chooseItem(
+            items[index]
+          );
+
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* ========================================
+   レシピ一覧
+======================================== */
+
+async function browseRecipes(){
+
+  let low =
+    Math.max(
+      1,
+      Math.floor(
+        Number(
+          minLevel.value
+        ) || 1
+      )
+    );
+
+
+  let high =
+    Math.max(
+      1,
+      Math.floor(
+        Number(
+          maxLevel.value
+        ) || 100
+      )
+    );
+
+
+  low =
+    Math.min(
+      low,
+      100
+    );
+
+  high =
+    Math.min(
+      high,
+      100
+    );
+
+
+  if(
+    low > high
+  ){
+
+    const temp =
+      low;
+
+    low =
+      high;
+
+    high =
+      temp;
+
+  }
+
+
+  minLevel.value =
+    low;
+
+  maxLevel.value =
+    high;
+
+
+  const craft =
+    craftSelect.value;
+
+
+  candidates.innerHTML =
+    "";
+
+
+  recipeSearchButton.disabled =
+    true;
+
+
+  setStatus(
+    `${craftSelect.options[
+      craftSelect.selectedIndex
+    ].text} Lv${low}～${high} を検索中…`
+  );
+
+
+  try{
+
+    const fields = [
+
+      "ItemResult.Name",
+
+      "AmountResult",
+
+      "CraftType.Name",
+
+      "RecipeLevelTable.ClassJobLevel",
+
+      "IsSecondary"
+
+    ].join(",");
+
+
+    const query =
+
+      `+CraftType.Name="${escapeQuery(
+        craft
+      )}" ` +
+
+      `+RecipeLevelTable.ClassJobLevel>=${low} ` +
+
+      `+RecipeLevelTable.ClassJobLevel<=${high} ` +
+
+      `+IsSecondary=false`;
+
+
+    let data =
+      await api(
+        "/search",
+        {
+
+          sheets:
+            "Recipe",
+
+          fields,
+
+          language:
+            "ja",
+
+          limit:
+            100,
+
+          query
+
+        }
+      );
+
+
+    const rows =
+      [];
+
+
+    rows.push(
+      ...(
+        data.results || []
+      )
+    );
+
+
+    /*
+      一覧が100件を超える場合も
+      最大500件まで続きを取得
+    */
+    let cursor =
+      data.next || null;
+
+    let page =
+      1;
+
+
+    while(
+      cursor &&
+      page < 5
+    ){
+
+      data =
+        await api(
+          "/search",
+          {
+
+            fields,
+
+            language:
+              "ja",
+
+            limit:
+              100,
+
+            cursor
+
+          }
+        );
+
+
+      rows.push(
+        ...(
+          data.results || []
+        )
+      );
+
+
+      cursor =
+        data.next || null;
+
+      page++;
+
+    }
+
+
+    const map =
+      new Map();
+
+
+    for(
+      const row
+      of rows
+    ){
+
+      const fields =
+        row.fields || {};
+
+
+      const result =
+        relationFields(
+          fields.ItemResult
+        );
+
+
+      const itemId =
+        relationId(
+          fields.ItemResult
+        );
+
+
+      const name =
+        result.Name || "";
+
+
+      const craftFields =
+        relationFields(
+          fields.CraftType
+        );
+
+
+      const levelFields =
+        relationFields(
+          fields.RecipeLevelTable
+        );
+
+
+      const level =
+        Number(
+          levelFields.ClassJobLevel ||
+          0
+        );
+
+
+      const yieldAmount =
+        Math.max(
+          1,
+          Number(
+            fields.AmountResult ||
+            1
+          )
+        );
+
+
+      if(
+        !itemId ||
+        !name
+      ){
+
+        continue;
+
+      }
+
+
+      /*
+        同じ完成品が複数レシピで
+        出た場合は1個だけ表示
+      */
+      if(
+        !map.has(
+          itemId
+        )
+      ){
+
+        map.set(
+          itemId,
+          {
+
+            recipeId:
+              Number(
+                row.row_id || 0
+              ),
+
+            item:{
+              id:itemId,
+              name
+            },
+
+            craft:
+              craftFields.Name ||
+              craft,
+
+            level,
+
+            yield:
+              yieldAmount
+
+          }
+        );
+
+      }
+
+    }
+
+
+    const recipes =
+      [
+        ...map.values()
+      ]
+      .sort(
+        (a,b) =>
+
+          a.level -
+          b.level
+
+          ||
+
+          a.item.name.localeCompare(
+            b.item.name,
+            "ja"
+          )
+      );
+
+
+    renderRecipeCandidates(
+      recipes,
+      low,
+      high
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setStatus(
+      "レシピ検索エラー：" +
+      error.message,
+      "error"
+    );
+
+
+  }finally{
+
+    recipeSearchButton.disabled =
+      false;
+
+  }
+
+}
+
+
+/* ========================================
+   レシピ候補表示
+======================================== */
+
+function renderRecipeCandidates(
+  recipes,
+  low,
+  high
+){
+
+  if(
+    !recipes.length
+  ){
+
+    candidates.innerHTML =
+      "";
+
+    setStatus(
+      `Lv${low}～${high}のレシピが見つかりませんでした`
+    );
+
+    return;
+
+  }
+
+
+  setStatus(
+    `${recipes.length}件のレシピが見つかりました`
+  );
+
+
+  candidates.innerHTML =
+    recipes
+    .map(
+      (recipe,index) => `
+
+        <div
+          class="candidate"
+          data-recipe-index="${index}"
+        >
+
+          <div class="candidate-row">
+
+            <div>
+
+              <div class="item-name">
+                ${escapeHTML(
+                  recipe.item.name
+                )}
+              </div>
+
+              <div class="small">
+
+                ${escapeHTML(
+                  recipe.craft
+                )}
+
+                / 1回で
+                ${recipe.yield}個
+
+              </div>
+
+            </div>
+
+
+            <div class="candidate-level">
+              Lv${recipe.level}
+            </div>
+
+          </div>
+
+        </div>
+
+      `
+    )
+    .join("");
+
+
+  candidates
+  .querySelectorAll(
+    "[data-recipe-index]"
+  )
+  .forEach(
+    element => {
+
+      element.addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              element.dataset
+              .recipeIndex
+            );
+
+
+          chooseItem(
+            recipes[index].item
+          );
+
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* ========================================
    アイテム選択
 ======================================== */
 
@@ -1310,20 +2130,26 @@ async function chooseItem(
   selectedItem =
     item;
 
+
   searchInput.value =
     item.name;
+
 
   candidates.innerHTML =
     "";
 
+
   selectedName.textContent =
     item.name;
+
 
   selectedDetail.textContent =
     "レシピ確認中…";
 
+
   selectedBox.style.display =
     "block";
+
 
   setStatus(
     "レシピを確認しています…"
@@ -1337,6 +2163,7 @@ async function chooseItem(
         item.name
       );
 
+
     if(
       recipes.length
     ){
@@ -1344,24 +2171,33 @@ async function chooseItem(
       const recipe =
         recipes[0];
 
+
       selectedDetail.textContent =
         `${recipe.craft}` +
+
         (
           recipe.level
             ? ` Lv${recipe.level}`
             : ""
-        ) +
+        )
+
+        +
+
         ` / 1回で${recipe.yield}個`;
+
 
       setStatus(
         "準備OK",
         "ok"
       );
 
+
     }else{
+
 
       selectedDetail.textContent =
         "製作レシピなし";
+
 
       setStatus(
         "このアイテムには製作レシピがありません"
@@ -1369,14 +2205,17 @@ async function chooseItem(
 
     }
 
+
   }catch(error){
 
     console.error(
       error
     );
 
+
     selectedDetail.textContent =
       "レシピ確認失敗";
+
 
     setStatus(
       error.message,
@@ -1389,7 +2228,7 @@ async function chooseItem(
 
 
 /* ========================================
-   XIVAPI relationship
+   Relationship
 ======================================== */
 
 function relationFields(
@@ -1398,22 +2237,25 @@ function relationFields(
 
   if(
     !value ||
-    typeof value !== "object"
+    typeof value !==
+      "object"
   ){
 
     return {};
 
   }
 
+
   if(
     value.fields &&
-    typeof value.fields
-      === "object"
+    typeof value.fields ===
+      "object"
   ){
 
     return value.fields;
 
   }
+
 
   return value;
 
@@ -1426,26 +2268,34 @@ function relationId(
 
   if(
     !value ||
-    typeof value !== "object"
+    typeof value !==
+      "object"
   ){
 
     return 0;
 
   }
 
+
   return Number(
+
     value.row_id ??
+
     value.rowId ??
+
     value.value ??
+
     value.id ??
+
     0
+
   ) || 0;
 
 }
 
 
 /* ========================================
-   レシピ取得
+   レシピ詳細取得
 ======================================== */
 
 async function getRecipes(
@@ -1453,7 +2303,9 @@ async function getRecipes(
 ){
 
   if(
-    recipeCache.has(name)
+    recipeCache.has(
+      name
+    )
   ){
 
     return recipeCache.get(
@@ -1509,23 +2361,28 @@ async function getRecipes(
 
   const recipes =
     (
-      data.results || []
+      data.results ||
+      []
     )
     .map(
       row => {
 
         const fields =
-          row.fields || {};
+          row.fields ||
+          {};
+
 
         const result =
           relationFields(
             fields.ItemResult
           );
 
+
         const craft =
           relationFields(
             fields.CraftType
           );
+
 
         const level =
           relationFields(
@@ -1533,11 +2390,6 @@ async function getRecipes(
           );
 
 
-        /*
-          同じレシピ内に
-          同じ素材が複数回入っていたら
-          ここで合算する。
-        */
         const ingredientMap =
           new Map();
 
@@ -1546,7 +2398,9 @@ async function getRecipes(
           Array.isArray(
             fields.Ingredient
           )
+
           ? fields.Ingredient
+
           : [];
 
 
@@ -1561,25 +2415,32 @@ async function getRecipes(
                 ingredient
               );
 
+
             const id =
               relationId(
                 ingredient
               );
 
+
             const ingredientName =
               ingredientFields.Name ||
               "";
 
+
             const amount =
               Number(
+
                 Array.isArray(
                   fields.AmountIngredient
                 )
+
                 ? fields
                     .AmountIngredient[
                       index
                     ] || 0
+
                 : 0
+
               );
 
 
@@ -1605,9 +2466,9 @@ async function getRecipes(
             ){
 
               ingredientMap
-                .get(key)
-                .amount +=
-                  amount;
+              .get(key)
+              .amount +=
+                amount;
 
             }else{
 
@@ -1631,11 +2492,13 @@ async function getRecipes(
 
           id:
             Number(
-              row.row_id || 0
+              row.row_id ||
+              0
             ),
 
           resultName:
-            result.Name || "",
+            result.Name ||
+            "",
 
           yield:
             Math.max(
@@ -1652,8 +2515,7 @@ async function getRecipes(
 
           level:
             Number(
-              level
-                .ClassJobLevel ||
+              level.ClassJobLevel ||
               0
             ),
 
@@ -1665,7 +2527,7 @@ async function getRecipes(
           ingredients:
             [
               ...ingredientMap
-                .values()
+              .values()
             ]
 
         };
@@ -1674,10 +2536,13 @@ async function getRecipes(
     )
     .filter(
       recipe =>
-        recipe.resultName
-          === name
+        recipe.resultName ===
+          name
+
         &&
-        recipe.ingredients.length
+
+        recipe.ingredients
+        .length
     );
 
 
@@ -1687,7 +2552,9 @@ async function getRecipes(
       Number(
         a.secondary
       )
+
       -
+
       Number(
         b.secondary
       )
@@ -1709,6 +2576,7 @@ async function getRecipes(
     recipes
   );
 
+
   return recipes;
 
 }
@@ -1728,7 +2596,9 @@ function addFinal(
 ){
 
   const key =
-    itemKey(item);
+    itemKey(
+      item
+    );
 
 
   if(
@@ -1762,6 +2632,7 @@ function addFinal(
       key
     );
 
+
   entry.required +=
     required;
 
@@ -1770,6 +2641,7 @@ function addFinal(
 
   entry.shortage +=
     shortage;
+
 
   if(
     stopped
@@ -1794,7 +2666,10 @@ function addCraft(
 ){
 
   const key =
-    itemKey(item);
+    itemKey(
+      item
+    );
+
 
   context.crafts.set(
     key,
@@ -1819,10 +2694,7 @@ function addCraft(
 
 
 /* ========================================
-   レシピグラフ作成
-
-   同じアイテムは
-   1ノードだけ作る。
+   グラフ作成
 ======================================== */
 
 async function buildGraph(
@@ -1834,11 +2706,15 @@ async function buildGraph(
 ){
 
   const key =
-    itemKey(item);
+    itemKey(
+      item
+    );
 
 
   if(
-    graph.has(key)
+    graph.has(
+      key
+    )
   ){
 
     return key;
@@ -1911,13 +2787,6 @@ async function buildGraph(
   }
 
 
-  /*
-    完成品は必ず展開。
-
-    中間素材は
-    自作OFFなら
-    そこより先を作らない。
-  */
   if(
     !isRoot &&
     !shouldCraft(
@@ -1934,6 +2803,7 @@ async function buildGraph(
     new Set(
       path
     );
+
 
   nextPath.add(
     key
@@ -1988,9 +2858,11 @@ async function buildGraph(
       edge.cycle =
         true;
 
+
       node.children.push(
         edge
       );
+
 
       continue;
 
@@ -2019,7 +2891,7 @@ async function buildGraph(
 
 
 /* ========================================
-   子ノード開放
+   子ノード解放
 ======================================== */
 
 function releaseChildren(
@@ -2086,12 +2958,6 @@ function releaseChildren(
 
 /* ========================================
    集約計算
-
-   同じ中間素材が
-   複数の枝で必要になっても
-
-   全部合算してから
-   製作回数を決める。
 ======================================== */
 
 function calculateGraph(
@@ -2114,19 +2980,19 @@ function calculateGraph(
   const states =
     new Map();
 
+
   const required =
     new Map();
 
+
   const indegree =
     new Map();
+
 
   const ownedRemaining =
     new Map();
 
 
-  /*
-    所持数を計算専用にコピー
-  */
   for(
     const [key,value]
     of Object.entries(
@@ -2138,17 +3004,15 @@ function calculateGraph(
       key,
       Math.max(
         0,
-        Number(value) ||
-        0
+        Number(
+          value
+        ) || 0
       )
     );
 
   }
 
 
-  /*
-    入次数を初期化
-  */
   for(
     const key
     of graph.keys()
@@ -2162,10 +3026,6 @@ function calculateGraph(
   }
 
 
-  /*
-    何個の親から
-    この素材が使われているか
-  */
   for(
     const node
     of graph.values()
@@ -2199,11 +3059,13 @@ function calculateGraph(
 
       indegree.set(
         edge.key,
+
         (
           indegree.get(
             edge.key
           ) || 0
         )
+
         + 1
       );
 
@@ -2278,10 +3140,6 @@ function calculateGraph(
       );
 
 
-    /*
-      不要な枝でも
-      子の入次数だけは開放する。
-    */
     if(
       requested <= 0
     ){
@@ -2329,12 +3187,6 @@ function calculateGraph(
     let used = 0;
 
 
-    /*
-      完成品は
-      所持数を差し引かない。
-
-      素材だけ差し引く。
-    */
     if(
       !isRoot
     ){
@@ -2374,9 +3226,6 @@ function calculateGraph(
       );
 
 
-    /*
-      所持だけで足りた
-    */
     if(
       need <= 0
     ){
@@ -2421,9 +3270,6 @@ function calculateGraph(
     }
 
 
-    /*
-      製作レシピなし
-    */
     if(
       !node.recipe
     ){
@@ -2476,9 +3322,6 @@ function calculateGraph(
     }
 
 
-    /*
-      自作OFF
-    */
     if(
       !isRoot &&
       !shouldCraft(
@@ -2547,11 +3390,6 @@ function calculateGraph(
     }
 
 
-    /*
-      全ルート分の必要数を
-      合算したあとで
-      製作回数を計算。
-    */
     const runs =
       Math.ceil(
         need /
@@ -2604,9 +3442,6 @@ function calculateGraph(
     );
 
 
-    /*
-      子素材へ必要数を伝える
-    */
     for(
       const edge
       of node.children
@@ -2617,10 +3452,6 @@ function calculateGraph(
         runs;
 
 
-      /*
-        万一循環レシピなら
-        最終素材扱いで停止
-      */
       if(
         edge.cycle
       ){
@@ -2675,12 +3506,15 @@ function calculateGraph(
 
       required.set(
         edge.key,
+
         (
           required.get(
             edge.key
           ) || 0
         )
+
         +
+
         childRequired
       );
 
@@ -2776,16 +3610,12 @@ async function calculate(){
     );
 
 
-    const rendered =
-      new Set();
-
-
     treeScroll.innerHTML =
       treeHTML(
         rootKey,
         graph,
         states,
-        rendered,
+        new Set(),
         true,
         null
       );
@@ -2833,30 +3663,30 @@ function renderSidebar(
   const crafts =
     [
       ...context.crafts
-        .values()
+      .values()
     ]
     .sort(
       (a,b) =>
         a.item.name
-          .localeCompare(
-            b.item.name,
-            "ja"
-          )
+        .localeCompare(
+          b.item.name,
+          "ja"
+        )
     );
 
 
   const finals =
     [
       ...context.finals
-        .values()
+      .values()
     ]
     .sort(
       (a,b) =>
         a.item.name
-          .localeCompare(
-            b.item.name,
-            "ja"
-          )
+        .localeCompare(
+          b.item.name,
+          "ja"
+        )
     );
 
 
@@ -2960,9 +3790,7 @@ function renderSidebar(
 
 
                   <div class="need-number">
-
                     必要 ${craft.required}
-
                   </div>
 
                 </div>
@@ -3016,14 +3844,13 @@ function renderSidebar(
             `;
 
           }
-        ).join("")
+        )
+        .join("")
 
         : `
-
           <div class="hint">
             中間素材はありません
           </div>
-
         `
       }
 
@@ -3039,9 +3866,7 @@ function renderSidebar(
 
       <div class="material-grid header-row">
 
-        <div>
-          素材
-        </div>
+        <div>素材</div>
 
         <div class="number">
           必要
@@ -3071,8 +3896,7 @@ function renderSidebar(
 
 
             const shortageClass =
-              material.shortage
-              === 0
+              material.shortage === 0
 
                 ? "enough"
 
@@ -3109,9 +3933,7 @@ function renderSidebar(
                 </div>
 
 
-                <div
-                  class="number required"
-                >
+                <div class="number required">
                   ${material.required}
                 </div>
 
@@ -3145,17 +3967,16 @@ function renderSidebar(
             `;
 
           }
-        ).join("")
+        )
+        .join("")
 
         : `
-
           <div
             class="hint"
             style="padding:12px 0"
           >
             必要素材はありません
           </div>
-
         `
       }
 
@@ -3235,53 +4056,33 @@ function treeHTML(
     "tree-card";
 
 
-  if(
-    isRoot
-  ){
-
+  if(isRoot){
     className +=
       " root";
-
   }
 
 
-  if(
-    state.leaf
-  ){
-
+  if(state.leaf){
     className +=
       " leaf";
-
   }
 
 
-  if(
-    state.stopped
-  ){
-
+  if(state.stopped){
     className +=
       " stopped";
-
   }
 
 
-  if(
-    state.covered
-  ){
-
+  if(state.covered){
     className +=
       " covered";
-
   }
 
 
-  if(
-    shared
-  ){
-
+  if(shared){
     className +=
       " shared";
-
   }
 
 
@@ -3311,9 +4112,7 @@ function treeHTML(
 
     info += `
 
-      <div
-        class="tree-info tree-good"
-      >
+      <div class="tree-info tree-good">
         所持 ${state.used} で充足
       </div>
 
@@ -3373,9 +4172,7 @@ function treeHTML(
 
     info += `
 
-      <div
-        class="tree-info tree-shared"
-      >
+      <div class="tree-info tree-shared">
         共通素材・合算済み
       </div>
 
@@ -3397,9 +4194,7 @@ function treeHTML(
       </div>
 
       <div class="tree-amount">
-
         × ${state.requested}
-
       </div>
 
       ${info}
@@ -3409,11 +4204,6 @@ function treeHTML(
   `;
 
 
-  /*
-    2回目以降の同じ素材は
-    カードだけ表示して
-    先は再展開しない。
-  */
   if(
     shared
   ){
@@ -3448,98 +4238,95 @@ function treeHTML(
 
   const childrenHTML =
     node.children
-      .map(
-        edge => {
+    .map(
+      edge => {
 
 
-          if(
-            edge.cycle
-          ){
+        if(
+          edge.cycle
+        ){
 
-            return `
+          return `
 
-              <div class="tree-child">
+            <div class="tree-child">
 
-                <div class="tree-node">
+              <div class="tree-node">
 
-                  <div
-                    class="tree-card leaf"
-                  >
+                <div class="tree-card leaf">
 
-                    <div class="tree-name">
+                  <div class="tree-name">
 
-                      ${escapeHTML(
-                        edge.item.name
-                      )}
+                    ${escapeHTML(
+                      edge.item.name
+                    )}
 
-                    </div>
+                  </div>
 
-                    <div class="tree-amount">
+                  <div class="tree-amount">
 
-                      × ${
-                        edge.amount *
-                        state.runs
-                      }
+                    × ${
+                      edge.amount *
+                      state.runs
+                    }
 
-                    </div>
+                  </div>
 
-                    <div class="tree-info">
-                      循環防止のため展開停止
-                    </div>
-
+                  <div class="tree-info">
+                    循環防止のため展開停止
                   </div>
 
                 </div>
 
               </div>
 
-            `;
-
-          }
-
-
-          const childState =
-            states.get(
-              edge.key
-            );
-
-
-          if(
-            !childState ||
-            childState.requested
-              <= 0
-          ){
-
-            return "";
-
-          }
-
-
-          const contribution =
-            edge.amount *
-            state.runs;
-
-
-          return `
-
-            <div class="tree-child">
-
-              ${treeHTML(
-                edge.key,
-                graph,
-                states,
-                rendered,
-                false,
-                contribution
-              )}
-
             </div>
 
           `;
 
         }
-      )
-      .join("");
+
+
+        const childState =
+          states.get(
+            edge.key
+          );
+
+
+        if(
+          !childState ||
+          childState.requested <= 0
+        ){
+
+          return "";
+
+        }
+
+
+        const contribution =
+          edge.amount *
+          state.runs;
+
+
+        return `
+
+          <div class="tree-child">
+
+            ${treeHTML(
+              edge.key,
+              graph,
+              states,
+              rendered,
+              false,
+              contribution
+            )}
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join("");
 
 
   return `
@@ -3568,76 +4355,76 @@ function treeHTML(
 function bindSidebarEvents(){
 
   sidebar
-    .querySelectorAll(
-      ".owned-input"
-    )
-    .forEach(
-      input => {
+  .querySelectorAll(
+    ".owned-input"
+  )
+  .forEach(
+    input => {
 
-        input.addEventListener(
-          "change",
-          () => {
+      input.addEventListener(
+        "change",
+        () => {
 
-            const key =
-              input.dataset.key;
-
-
-            owned[key] =
-              Math.max(
-                0,
-                Math.floor(
-                  Number(
-                    input.value
-                  ) || 0
-                )
-              );
+          const key =
+            input.dataset.key;
 
 
-            saveSettings();
+          owned[key] =
+            Math.max(
+              0,
+              Math.floor(
+                Number(
+                  input.value
+                ) || 0
+              )
+            );
 
-            calculate();
 
-          }
-        );
+          saveSettings();
 
-      }
-    );
+          calculate();
+
+        }
+      );
+
+    }
+  );
 
 
   sidebar
-    .querySelectorAll(
-      ".craft-toggle"
-    )
-    .forEach(
-      input => {
+  .querySelectorAll(
+    ".craft-toggle"
+  )
+  .forEach(
+    input => {
 
-        input.addEventListener(
-          "change",
-          () => {
+      input.addEventListener(
+        "change",
+        () => {
 
-            const key =
-              input.dataset.key;
-
-
-            craftMode[key] =
-              input.checked;
+          const key =
+            input.dataset.key;
 
 
-            saveSettings();
+          craftMode[key] =
+            input.checked;
 
-            calculate();
 
-          }
-        );
+          saveSettings();
 
-      }
-    );
+          calculate();
+
+        }
+      );
+
+    }
+  );
 
 }
 
 
 /* ========================================
-   所持数を全部0
+   所持数リセット
 ======================================== */
 
 async function resetAllOwned(){
@@ -3648,7 +4435,9 @@ async function resetAllOwned(){
     )
     .some(
       value =>
-        Number(value) > 0
+        Number(
+          value
+        ) > 0
     );
 
 
@@ -3750,16 +4539,14 @@ function clearSelection(){
   treeScroll.innerHTML = `
 
     <div class="empty">
-
       ここに素材ツリーが表示されます
-
     </div>
 
   `;
 
 
   setStatus(
-    "アイテム名を2文字以上入力してください"
+    "アイテムを選んでください"
   );
 
 }
@@ -3768,6 +4555,30 @@ function clearSelection(){
 /* ========================================
    イベント
 ======================================== */
+
+nameTab.addEventListener(
+  "click",
+  () => {
+
+    showSearchMode(
+      "name"
+    );
+
+  }
+);
+
+
+recipeTab.addEventListener(
+  "click",
+  () => {
+
+    showSearchMode(
+      "recipe"
+    );
+
+  }
+);
+
 
 searchButton.addEventListener(
   "click",
@@ -3788,7 +4599,8 @@ searchInput.addEventListener(
   event => {
 
     if(
-      event.key === "Enter"
+      event.key ===
+      "Enter"
     ){
 
       event.preventDefault();
@@ -3816,7 +4628,7 @@ searchInput.addEventListener(
 
     const value =
       searchInput.value
-        .trim();
+      .trim();
 
 
     if(
@@ -3844,6 +4656,46 @@ searchInput.addEventListener(
 );
 
 
+recipeSearchButton.addEventListener(
+  "click",
+  browseRecipes
+);
+
+
+minLevel.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Enter"
+    ){
+
+      browseRecipes();
+
+    }
+
+  }
+);
+
+
+maxLevel.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Enter"
+    ){
+
+      browseRecipes();
+
+    }
+
+  }
+);
+
+
 calculateButton.addEventListener(
   "click",
   calculate
@@ -3855,7 +4707,8 @@ qtyInput.addEventListener(
   event => {
 
     if(
-      event.key === "Enter"
+      event.key ===
+      "Enter"
     ){
 
       event.preventDefault();
@@ -3878,6 +4731,7 @@ clearButton.addEventListener(
   "click",
   clearSelection
 );
+
 
 })();
 </script>
