@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>FF14 製作素材ツール</title>
 
 <style>
@@ -21,33 +20,19 @@
   --blue:#77a8df;
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html,
-body{
+html,body{
   margin:0;
   min-height:100%;
   background:var(--bg);
   color:var(--text);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Yu Gothic",
-    "Meiryo",
-    sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic","Meiryo",sans-serif;
 }
 
-body{
-  min-height:100vh;
-}
+body{min-height:100vh}
 
-button,
-input{
-  font:inherit;
-}
+button,input{font:inherit}
 
 button{
   border:0;
@@ -59,18 +44,18 @@ button{
   color:#1b150b;
 }
 
-button:hover{
-  filter:brightness(1.08);
-}
-
-button:disabled{
-  opacity:.45;
-  cursor:default;
-}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.45;cursor:default}
 
 button.secondary{
   color:var(--text);
   background:#2c3747;
+}
+
+button.danger{
+  color:#ffd8d4;
+  background:#542b30;
+  border:1px solid #7d4148;
 }
 
 input{
@@ -85,8 +70,6 @@ input:focus{
   outline:2px solid rgba(223,178,95,.28);
   border-color:var(--gold);
 }
-
-/* ===== 全体 ===== */
 
 .app{
   min-height:100vh;
@@ -128,15 +111,8 @@ input:focus{
   min-height:18px;
 }
 
-.status.ok{
-  color:var(--green);
-}
-
-.status.error{
-  color:var(--red);
-}
-
-/* ===== 検索候補 ===== */
+.status.ok{color:var(--green)}
+.status.error{color:var(--red)}
 
 .candidates{
   margin-top:7px;
@@ -158,17 +134,13 @@ input:focus{
   background:#273343;
 }
 
-.item-name{
-  font-weight:700;
-}
+.item-name{font-weight:700}
 
 .small{
   color:var(--sub);
   font-size:11px;
   margin-top:3px;
 }
-
-/* ===== 選択中 ===== */
 
 .selected{
   display:none;
@@ -181,19 +153,29 @@ input:focus{
   display:flex;
   align-items:center;
   gap:8px;
+  flex-wrap:wrap;
 }
 
 .selected-info{
   flex:1;
-  min-width:0;
+  min-width:180px;
+}
+
+.qty-wrap{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.qty-label{
+  color:var(--sub);
+  font-size:11px;
 }
 
 #qtyInput{
   width:90px;
   text-align:center;
 }
-
-/* ===== メイン ===== */
 
 .workspace{
   flex:1;
@@ -210,13 +192,13 @@ input:focus{
   border-right:1px solid var(--line);
   padding:14px;
   overflow-y:auto;
-  height:calc(100vh - 150px);
+  height:calc(100vh - 160px);
 }
 
 .main{
   min-width:0;
   padding:14px;
-  height:calc(100vh - 150px);
+  height:calc(100vh - 160px);
   overflow:hidden;
 }
 
@@ -251,10 +233,7 @@ input:focus{
   font-size:13px;
 }
 
-/* ===== 製作カード ===== */
-
-.target-card,
-.craft-card{
+.target-card,.craft-card{
   background:var(--panel2);
   border:1px solid var(--line);
   border-radius:9px;
@@ -291,7 +270,7 @@ input:focus{
 }
 
 .checkbox-row{
-  grid-column:1 / -1;
+  grid-column:1/-1;
   display:flex;
   align-items:center;
   gap:7px;
@@ -299,11 +278,7 @@ input:focus{
   cursor:pointer;
 }
 
-.checkbox-row input{
-  width:auto;
-}
-
-/* ===== 最終素材 ===== */
+.checkbox-row input{width:auto}
 
 .material-grid{
   display:grid;
@@ -326,9 +301,7 @@ input:focus{
   text-align:right;
 }
 
-.number{
-  text-align:right;
-}
+.number{text-align:right}
 
 .required{
   color:var(--gold);
@@ -344,8 +317,6 @@ input:focus{
   color:var(--green);
   font-weight:700;
 }
-
-/* ===== ツリー ===== */
 
 .tree-panel{
   height:100%;
@@ -405,21 +376,10 @@ input:focus{
   border:2px solid var(--gold);
 }
 
-.tree-card.leaf{
-  background:#18212b;
-}
-
-.tree-card.stopped{
-  border-color:#d39e4e;
-}
-
-.tree-card.covered{
-  border-color:#5caf78;
-}
-
-.tree-card.shared{
-  border-color:var(--blue);
-}
+.tree-card.leaf{background:#18212b}
+.tree-card.stopped{border-color:#d39e4e}
+.tree-card.covered{border-color:#5caf78}
+.tree-card.shared{border-color:var(--blue)}
 
 .tree-name{
   font-size:13px;
@@ -441,13 +401,8 @@ input:focus{
   line-height:1.4;
 }
 
-.tree-good{
-  color:var(--green);
-}
-
-.tree-shared{
-  color:#8fc1f3;
-}
+.tree-good{color:var(--green)}
+.tree-shared{color:#8fc1f3}
 
 .tree-children{
   display:flex;
@@ -456,9 +411,7 @@ input:focus{
   position:relative;
 }
 
-.tree-child{
-  position:relative;
-}
+.tree-child{position:relative}
 
 .tree-child::before{
   content:"";
@@ -478,33 +431,24 @@ input:focus{
   border-left:1px solid var(--line2);
 }
 
-/* ===== スマホ ===== */
-
 @media(max-width:800px){
-
-  .header{
-    padding:10px;
-  }
-
-  .title{
-    font-size:18px;
-  }
-
-  .selected-row{
-    flex-wrap:wrap;
-  }
+  .header{padding:10px}
+  .title{font-size:18px}
 
   .selected-info{
     flex-basis:100%;
   }
 
-  #qtyInput{
+  .qty-wrap{
     flex:1;
   }
 
-  .workspace{
-    display:block;
+  #qtyInput{
+    flex:1;
+    width:auto;
   }
+
+  .workspace{display:block}
 
   .sidebar{
     height:auto;
@@ -520,9 +464,7 @@ input:focus{
     overflow:visible;
   }
 
-  .tree-panel{
-    height:auto;
-  }
+  .tree-panel{height:auto}
 
   .tree-scroll{
     overflow-x:hidden;
@@ -547,13 +489,9 @@ input:focus{
     border-left:1px solid var(--line2);
   }
 
-  .tree-children::before{
-    display:none;
-  }
+  .tree-children::before{display:none}
 
-  .tree-child{
-    margin-top:8px;
-  }
+  .tree-child{margin-top:8px}
 
   .tree-child::before{
     left:-14px;
@@ -561,8 +499,11 @@ input:focus{
     top:23px;
   }
 
-  .tree-toolbar-info{
-    display:none;
+  .tree-toolbar-info{display:none}
+
+  button.danger{
+    width:100%;
+    margin-top:2px;
   }
 }
 </style>
@@ -573,86 +514,82 @@ input:focus{
 <div class="app">
 
 <header class="header">
-  <div class="header-inner">
+<div class="header-inner">
 
-    <div class="title">
-      FF14 製作素材ツール
-    </div>
+  <div class="title">FF14 製作素材ツール</div>
 
-    <div class="search-row">
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="作りたいアイテム名"
-        autocomplete="off"
-      >
+  <div class="search-row">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="作りたいアイテム名"
+      autocomplete="off"
+    >
+    <button id="searchButton">検索</button>
+  </div>
 
-      <button id="searchButton">
-        検索
-      </button>
-    </div>
+  <div id="status" class="status">
+    アイテム名を2文字以上入力してください
+  </div>
 
-    <div id="status" class="status">
-      アイテム名を2文字以上入力してください
-    </div>
+  <div id="candidates" class="candidates"></div>
 
-    <div id="candidates" class="candidates"></div>
+  <div id="selected" class="selected">
+    <div class="selected-row">
 
-    <div id="selected" class="selected">
+      <div class="selected-info">
+        <div id="selectedName" class="item-name"></div>
+        <div id="selectedDetail" class="small"></div>
+      </div>
 
-      <div class="selected-row">
-
-        <div class="selected-info">
-          <div id="selectedName" class="item-name"></div>
-          <div id="selectedDetail" class="small"></div>
-        </div>
-
+      <div class="qty-wrap">
+        <span class="qty-label">作る個数</span>
         <input
           id="qtyInput"
           type="number"
           min="1"
           inputmode="numeric"
           value="1"
-          title="作りたい個数"
         >
-
-        <button id="calculateButton">
-          計算
-        </button>
-
-        <button
-          id="clearButton"
-          class="secondary"
-        >
-          解除
-        </button>
-
       </div>
 
-    </div>
+      <button id="calculateButton">計算</button>
 
+      <button
+        id="clearButton"
+        class="secondary"
+      >
+        解除
+      </button>
+
+      <button
+        id="resetOwnedButton"
+        class="danger"
+      >
+        所持数をすべて0
+      </button>
+
+    </div>
   </div>
+
+</div>
 </header>
 
 
 <div class="workspace">
 
   <aside id="sidebar" class="sidebar">
-
     <div class="empty">
       アイテムを検索して<br>
       製作素材を計算してください
     </div>
-
   </aside>
-
 
   <main class="main">
 
     <div class="tree-panel">
 
       <div class="tree-toolbar">
-
         <div class="tree-toolbar-title">
           素材ツリー
         </div>
@@ -660,15 +597,12 @@ input:focus{
         <div class="tree-toolbar-info">
           PC：左 → 右　／　スマホ：上 → 下
         </div>
-
       </div>
 
       <div id="treeScroll" class="tree-scroll">
-
         <div class="empty">
           ここに素材ツリーが表示されます
         </div>
-
       </div>
 
     </div>
@@ -687,42 +621,22 @@ input:focus{
 
 const API = "https://v2.xivapi.com/api";
 
-const searchInput =
-  document.getElementById("searchInput");
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
+const status = document.getElementById("status");
+const candidates = document.getElementById("candidates");
 
-const searchButton =
-  document.getElementById("searchButton");
+const selectedBox = document.getElementById("selected");
+const selectedName = document.getElementById("selectedName");
+const selectedDetail = document.getElementById("selectedDetail");
 
-const status =
-  document.getElementById("status");
+const qtyInput = document.getElementById("qtyInput");
+const calculateButton = document.getElementById("calculateButton");
+const clearButton = document.getElementById("clearButton");
+const resetOwnedButton = document.getElementById("resetOwnedButton");
 
-const candidates =
-  document.getElementById("candidates");
-
-const selectedBox =
-  document.getElementById("selected");
-
-const selectedName =
-  document.getElementById("selectedName");
-
-const selectedDetail =
-  document.getElementById("selectedDetail");
-
-const qtyInput =
-  document.getElementById("qtyInput");
-
-const calculateButton =
-  document.getElementById("calculateButton");
-
-const clearButton =
-  document.getElementById("clearButton");
-
-const sidebar =
-  document.getElementById("sidebar");
-
-const treeScroll =
-  document.getElementById("treeScroll");
-
+const sidebar = document.getElementById("sidebar");
+const treeScroll = document.getElementById("treeScroll");
 
 let selectedItem = null;
 let searchTimer = null;
@@ -733,9 +647,9 @@ const owned = {};
 const craftMode = {};
 
 
-/* ========================================
+/* ===============================
    保存
-======================================== */
+=============================== */
 
 function loadSettings(){
 
@@ -756,12 +670,7 @@ function loadSettings(){
     );
 
   }catch(error){
-
-    console.warn(
-      "設定読み込み失敗",
-      error
-    );
-
+    console.warn("設定読み込み失敗",error);
   }
 
 }
@@ -782,12 +691,7 @@ function saveSettings(){
     );
 
   }catch(error){
-
-    console.warn(
-      "設定保存失敗",
-      error
-    );
-
+    console.warn("設定保存失敗",error);
   }
 
 }
@@ -795,15 +699,13 @@ function saveSettings(){
 loadSettings();
 
 
-/* ========================================
+/* ===============================
    共通
-======================================== */
+=============================== */
 
 function escapeHTML(value){
 
-  return String(
-    value ?? ""
-  ).replace(
+  return String(value ?? "").replace(
     /[&<>"']/g,
     character => ({
       "&":"&amp;",
@@ -851,12 +753,9 @@ function ownedQty(item){
 
 function shouldCraft(item){
 
-  const key =
-    itemKey(item);
+  const key = itemKey(item);
 
-  if(
-    craftMode[key] === undefined
-  ){
+  if(craftMode[key] === undefined){
     return true;
   }
 
@@ -867,13 +766,9 @@ function shouldCraft(item){
 }
 
 
-function setStatus(
-  text,
-  type=""
-){
+function setStatus(text,type=""){
 
-  status.textContent =
-    text;
+  status.textContent = text;
 
   status.className =
     "status" +
@@ -886,19 +781,15 @@ function setStatus(
 }
 
 
-/* ========================================
+/* ===============================
    XIVAPI
-======================================== */
+=============================== */
 
-async function api(
-  path,
-  params={}
-){
+async function api(path,params={}){
 
-  const url =
-    new URL(
-      API + path
-    );
+  const url = new URL(
+    API + path
+  );
 
   for(
     const [key,value]
@@ -939,9 +830,9 @@ async function api(
 }
 
 
-/* ========================================
+/* ===============================
    検索
-======================================== */
+=============================== */
 
 async function searchItems(){
 
@@ -960,9 +851,7 @@ async function searchItems(){
 
   }
 
-  setStatus(
-    "検索中…"
-  );
+  setStatus("検索中…");
 
   candidates.innerHTML = "";
 
@@ -985,11 +874,9 @@ async function searchItems(){
       (data.results || [])
       .map(
         row => ({
-          id:
-            Number(
-              row.row_id || 0
-            ),
-
+          id:Number(
+            row.row_id || 0
+          ),
           name:
             row.fields?.Name || ""
         })
@@ -1037,9 +924,7 @@ async function searchItems(){
       ).join("");
 
     candidates
-      .querySelectorAll(
-        ".candidate"
-      )
+      .querySelectorAll(".candidate")
       .forEach(
         element => {
 
@@ -1047,13 +932,12 @@ async function searchItems(){
             "click",
             () => {
 
-              const index =
-                Number(
-                  element.dataset.index
-                );
-
               chooseItem(
-                items[index]
+                items[
+                  Number(
+                    element.dataset.index
+                  )
+                ]
               );
 
             }
@@ -1077,20 +961,18 @@ async function searchItems(){
 }
 
 
-/* ========================================
+/* ===============================
    アイテム選択
-======================================== */
+=============================== */
 
 async function chooseItem(item){
 
-  selectedItem =
-    item;
+  selectedItem = item;
 
   searchInput.value =
     item.name;
 
-  candidates.innerHTML =
-    "";
+  candidates.innerHTML = "";
 
   selectedName.textContent =
     item.name;
@@ -1159,9 +1041,9 @@ async function chooseItem(item){
 }
 
 
-/* ========================================
+/* ===============================
    XIVAPI relationship
-======================================== */
+=============================== */
 
 function relationFields(value){
 
@@ -1204,15 +1086,13 @@ function relationId(value){
 }
 
 
-/* ========================================
+/* ===============================
    レシピ取得
-======================================== */
+=============================== */
 
 async function getRecipes(name){
 
-  if(
-    recipeCache.has(name)
-  ){
+  if(recipeCache.has(name)){
 
     return recipeCache.get(
       name
@@ -1248,22 +1128,22 @@ async function getRecipes(name){
     .map(
       row => {
 
-        const fields =
+        const f =
           row.fields || {};
 
         const result =
           relationFields(
-            fields.ItemResult
+            f.ItemResult
           );
 
         const craft =
           relationFields(
-            fields.CraftType
+            f.CraftType
           );
 
         const level =
           relationFields(
-            fields.RecipeLevelTable
+            f.RecipeLevelTable
           );
 
         const ingredientMap =
@@ -1271,9 +1151,9 @@ async function getRecipes(name){
 
         const ingredients =
           Array.isArray(
-            fields.Ingredient
+            f.Ingredient
           )
-          ? fields.Ingredient
+          ? f.Ingredient
           : [];
 
         ingredients.forEach(
@@ -1289,21 +1169,21 @@ async function getRecipes(name){
                 ingredient
               );
 
-            const name =
+            const ingredientName =
               ingredientFields.Name || "";
 
             const amount =
               Number(
                 Array.isArray(
-                  fields.AmountIngredient
+                  f.AmountIngredient
                 )
-                ? fields.AmountIngredient[index] || 0
+                ? f.AmountIngredient[index] || 0
                 : 0
               );
 
             if(
               !id ||
-              !name ||
+              !ingredientName ||
               amount <= 0
             ){
               return;
@@ -1316,8 +1196,9 @@ async function getRecipes(name){
               ingredientMap.has(key)
             ){
 
-              ingredientMap.get(key).amount +=
-                amount;
+              ingredientMap
+                .get(key)
+                .amount += amount;
 
             }else{
 
@@ -1325,7 +1206,7 @@ async function getRecipes(name){
                 key,
                 {
                   id,
-                  name,
+                  name:ingredientName,
                   amount
                 }
               );
@@ -1349,7 +1230,7 @@ async function getRecipes(name){
             Math.max(
               1,
               Number(
-                fields.AmountResult || 1
+                f.AmountResult || 1
               )
             ),
 
@@ -1363,7 +1244,7 @@ async function getRecipes(name){
 
           secondary:
             Boolean(
-              fields.IsSecondary
+              f.IsSecondary
             ),
 
           ingredients:
@@ -1405,9 +1286,9 @@ async function getRecipes(name){
 }
 
 
-/* ========================================
+/* ===============================
    集計
-======================================== */
+=============================== */
 
 function addFinal(
   context,
@@ -1441,14 +1322,9 @@ function addFinal(
   const entry =
     context.finals.get(key);
 
-  entry.required +=
-    required;
-
-  entry.used +=
-    used;
-
-  entry.shortage +=
-    shortage;
+  entry.required += required;
+  entry.used += used;
+  entry.shortage += shortage;
 
   if(stopped){
     entry.stopped = true;
@@ -1485,11 +1361,9 @@ function addCraft(
 }
 
 
-/* ========================================
-   レシピグラフ作成
-
-   同じアイテムは1ノードだけ作る。
-======================================== */
+/* ===============================
+   グラフ作成
+=============================== */
 
 async function buildGraph(
   item,
@@ -1505,16 +1379,13 @@ async function buildGraph(
   if(
     graph.has(key)
   ){
-
     return key;
-
   }
 
   const node = {
     item,
     recipe:null,
-    children:[],
-    cycle:false
+    children:[]
   };
 
   graph.set(
@@ -1554,11 +1425,6 @@ async function buildGraph(
     return key;
   }
 
-  /*
-    完成品は必ず展開。
-    中間素材は自作OFFなら
-    それより先はグラフを作らない。
-  */
   if(
     !isRoot &&
     !shouldCraft(item)
@@ -1582,7 +1448,9 @@ async function buildGraph(
     };
 
     const childKey =
-      itemKey(childItem);
+      itemKey(
+        childItem
+      );
 
     const edge = {
       key:childKey,
@@ -1592,7 +1460,9 @@ async function buildGraph(
     };
 
     if(
-      nextPath.has(childKey)
+      nextPath.has(
+        childKey
+      )
     ){
 
       edge.cycle = true;
@@ -1624,12 +1494,65 @@ async function buildGraph(
 }
 
 
-/* ========================================
-   集約計算
+/* ===============================
+   子ノード開放
+=============================== */
 
-   親全部の必要数が集まってから
-   そのアイテムの製作回数を決める。
-======================================== */
+function releaseChildren(
+  node,
+  indegree,
+  queue
+){
+
+  const released =
+    new Set();
+
+  for(
+    const edge
+    of node.children
+  ){
+
+    if(
+      edge.cycle ||
+      released.has(
+        edge.key
+      )
+    ){
+      continue;
+    }
+
+    released.add(
+      edge.key
+    );
+
+    const next =
+      (
+        indegree.get(
+          edge.key
+        ) || 0
+      ) - 1;
+
+    indegree.set(
+      edge.key,
+      next
+    );
+
+    if(next === 0){
+
+      queue.push(
+        edge.key
+      );
+
+    }
+
+  }
+
+}
+
+
+/* ===============================
+   集約計算
+=============================== */
 
 function calculateGraph(
   graph,
@@ -1655,9 +1578,6 @@ function calculateGraph(
     new Map();
 
 
-  /*
-    所持数を計算用にコピー
-  */
   for(
     const [key,value]
     of Object.entries(owned)
@@ -1674,9 +1594,6 @@ function calculateGraph(
   }
 
 
-  /*
-    入次数
-  */
   for(
     const key
     of graph.keys()
@@ -1688,6 +1605,7 @@ function calculateGraph(
     );
 
   }
+
 
   for(
     const node
@@ -1706,7 +1624,9 @@ function calculateGraph(
       indegree.set(
         edge.key,
         (
-          indegree.get(edge.key) || 0
+          indegree.get(
+            edge.key
+          ) || 0
         ) + 1
       );
 
@@ -1759,11 +1679,6 @@ function calculateGraph(
       );
 
 
-    /*
-      このアイテムが実際には
-      不要だった場合でも
-      子の入次数は開放する。
-    */
     if(requested <= 0){
 
       states.set(
@@ -1795,10 +1710,6 @@ function calculateGraph(
     let used = 0;
 
 
-    /*
-      完成品自体の所持数は
-      今まで通り差し引かない。
-    */
     if(!isRoot){
 
       const available =
@@ -1830,9 +1741,6 @@ function calculateGraph(
       );
 
 
-    /*
-      所持だけで充足
-    */
     if(need <= 0){
 
       states.set(
@@ -1861,9 +1769,6 @@ function calculateGraph(
     }
 
 
-    /*
-      レシピなし
-    */
     if(!node.recipe){
 
       addFinal(
@@ -1900,12 +1805,11 @@ function calculateGraph(
     }
 
 
-    /*
-      自作OFF
-    */
     if(
       !isRoot &&
-      !shouldCraft(node.item)
+      !shouldCraft(
+        node.item
+      )
     ){
 
       addCraft(
@@ -1953,11 +1857,6 @@ function calculateGraph(
     }
 
 
-    /*
-      ここで初めて、
-      合算された必要数から
-      製作回数を決める。
-    */
     const runs =
       Math.ceil(
         need /
@@ -1996,9 +1895,6 @@ function calculateGraph(
     );
 
 
-    /*
-      子素材へ必要数を伝える
-    */
     for(
       const edge
       of node.children
@@ -2008,10 +1904,6 @@ function calculateGraph(
         edge.amount * runs;
 
 
-      /*
-        万一循環レシピがあった場合は
-        そこで最終素材扱いにして止める。
-      */
       if(edge.cycle){
 
         const childKey =
@@ -2021,7 +1913,9 @@ function calculateGraph(
           Math.max(
             0,
             Number(
-              ownedRemaining.get(childKey) || 0
+              ownedRemaining.get(
+                childKey
+              ) || 0
             )
           );
 
@@ -2037,7 +1931,8 @@ function calculateGraph(
         );
 
         const cycleShortage =
-          childRequired - cycleUsed;
+          childRequired -
+          cycleUsed;
 
         addFinal(
           context,
@@ -2055,7 +1950,9 @@ function calculateGraph(
       required.set(
         edge.key,
         (
-          required.get(edge.key) || 0
+          required.get(
+            edge.key
+          ) || 0
         ) + childRequired
       );
 
@@ -2079,61 +1976,9 @@ function calculateGraph(
 }
 
 
-/* ========================================
-   子ノード開放
-======================================== */
-
-function releaseChildren(
-  node,
-  indegree,
-  queue
-){
-
-  const released =
-    new Set();
-
-  for(
-    const edge
-    of node.children
-  ){
-
-    if(
-      edge.cycle ||
-      released.has(edge.key)
-    ){
-      continue;
-    }
-
-    released.add(
-      edge.key
-    );
-
-    const next =
-      (
-        indegree.get(edge.key) || 0
-      ) - 1;
-
-    indegree.set(
-      edge.key,
-      next
-    );
-
-    if(next === 0){
-
-      queue.push(
-        edge.key
-      );
-
-    }
-
-  }
-
-}
-
-
-/* ========================================
+/* ===============================
    計算
-======================================== */
+=============================== */
 
 async function calculate(){
 
@@ -2231,9 +2076,9 @@ async function calculate(){
 }
 
 
-/* ========================================
+/* ===============================
    左パネル
-======================================== */
+=============================== */
 
 function renderSidebar(
   context,
@@ -2297,15 +2142,9 @@ function renderSidebar(
       </h3>
 
       <div class="hint">
-
-        同じ中間素材は全ルート分を
-        合算してから製作回数を計算します。<br>
-
+        同じ中間素材は全ルート分を合算してから製作回数を計算します。<br>
         所持数は自動で差し引きます。<br>
-
-        「自作する」をOFFにすると、
-        その素材より先を展開しません。
-
+        「自作する」をOFFにすると、その素材より先を展開しません。
       </div>
 
       ${
@@ -2328,11 +2167,9 @@ function renderSidebar(
                   <div>
 
                     <div class="item-name">
-
                       ${escapeHTML(
                         craft.item.name
                       )}
-
                     </div>
 
                     <div class="small">
@@ -2358,9 +2195,7 @@ function renderSidebar(
                   </div>
 
                   <div class="need-number">
-
                     必要 ${craft.required}
-
                   </div>
 
                 </div>
@@ -2380,7 +2215,6 @@ function renderSidebar(
                     inputmode="numeric"
                     value="${ownedQty(craft.item)}"
                   >
-
 
                   <label class="checkbox-row">
 
@@ -2427,12 +2261,10 @@ function renderSidebar(
       </h3>
 
       <div class="material-grid header-row">
-
         <div>素材</div>
         <div class="number">必要</div>
         <div class="number">所持</div>
         <div class="number">不足</div>
-
       </div>
 
       ${
@@ -2480,7 +2312,6 @@ function renderSidebar(
                 </div>
 
                 <div>
-
                   <input
                     class="owned-input"
                     data-key="${escapeHTML(key)}"
@@ -2489,7 +2320,6 @@ function renderSidebar(
                     inputmode="numeric"
                     value="${ownedQty(material.item)}"
                   >
-
                 </div>
 
                 <div class="number ${shortageClass}">
@@ -2509,9 +2339,7 @@ function renderSidebar(
             class="hint"
             style="padding:12px 0"
           >
-
             必要素材はありません
-
           </div>
 
         `
@@ -2527,9 +2355,9 @@ function renderSidebar(
 }
 
 
-/* ========================================
+/* ===============================
    ツリー
-======================================== */
+=============================== */
 
 function treeHTML(
   key,
@@ -2602,11 +2430,9 @@ function treeHTML(
   ){
 
     info += `
-
       <div class="tree-info">
         この枝から ${contribution}
       </div>
-
     `;
 
   }
@@ -2615,11 +2441,9 @@ function treeHTML(
   if(state.covered){
 
     info += `
-
       <div class="tree-info tree-good">
         所持 ${state.used} で充足
       </div>
-
     `;
 
   }else{
@@ -2627,11 +2451,9 @@ function treeHTML(
     if(state.used > 0){
 
       info += `
-
         <div class="tree-info">
           所持 ${state.used} 使用
         </div>
-
       `;
 
     }
@@ -2639,11 +2461,9 @@ function treeHTML(
     if(state.stopped){
 
       info += `
-
         <div class="tree-info">
           自作しない
         </div>
-
       `;
 
     }else if(
@@ -2652,11 +2472,9 @@ function treeHTML(
     ){
 
       info += `
-
         <div class="tree-info">
           ${state.runs}回製作
         </div>
-
       `;
 
     }
@@ -2667,11 +2485,9 @@ function treeHTML(
   if(shared){
 
     info += `
-
       <div class="tree-info tree-shared">
         共通素材・合算済み
       </div>
-
     `;
 
   }
@@ -2682,17 +2498,13 @@ function treeHTML(
     <div class="${className}">
 
       <div class="tree-name">
-
         ${escapeHTML(
           node.item.name
         )}
-
       </div>
 
       <div class="tree-amount">
-
         × ${state.requested}
-
       </div>
 
       ${info}
@@ -2702,18 +2514,12 @@ function treeHTML(
   `;
 
 
-  /*
-    2回目以降の同じ素材は
-    カードだけ出して先は展開しない。
-  */
   if(shared){
 
     return `
-
       <div class="tree-node">
         ${card}
       </div>
-
     `;
 
   }
@@ -2726,11 +2532,9 @@ function treeHTML(
   ){
 
     return `
-
       <div class="tree-node">
         ${card}
       </div>
-
     `;
 
   }
@@ -2823,9 +2627,7 @@ function treeHTML(
       ${card}
 
       <div class="tree-children">
-
         ${childrenHTML}
-
       </div>
 
     </div>
@@ -2835,9 +2637,9 @@ function treeHTML(
 }
 
 
-/* ========================================
+/* ===============================
    左パネル操作
-======================================== */
+=============================== */
 
 function bindSidebarEvents(){
 
@@ -2906,9 +2708,82 @@ function bindSidebarEvents(){
 }
 
 
-/* ========================================
+/* ===============================
+   所持数全リセット
+=============================== */
+
+function resetAllOwned(){
+
+  const hasOwned =
+    Object.values(owned)
+    .some(
+      value =>
+        Number(value) > 0
+    );
+
+  if(!hasOwned){
+
+    setStatus(
+      "所持数はすでにすべて0です",
+      "ok"
+    );
+
+    return;
+
+  }
+
+
+  const ok =
+    confirm(
+      "登録している所持数をすべて0に戻しますか？\n\n自作する設定や製作個数は変更されません。"
+    );
+
+  if(!ok){
+    return;
+  }
+
+
+  for(
+    const key
+    of Object.keys(owned)
+  ){
+
+    delete owned[key];
+
+  }
+
+
+  saveSettings();
+
+
+  if(selectedItem){
+
+    calculate().then(
+      () => {
+
+        setStatus(
+          "所持数をすべて0に戻しました",
+          "ok"
+        );
+
+      }
+    );
+
+  }else{
+
+    setStatus(
+      "所持数をすべて0に戻しました",
+      "ok"
+    );
+
+  }
+
+}
+
+
+/* ===============================
    解除
-======================================== */
+=============================== */
 
 function clearSelection(){
 
@@ -2925,10 +2800,8 @@ function clearSelection(){
   sidebar.innerHTML = `
 
     <div class="empty">
-
       アイテムを検索して<br>
       製作素材を計算してください
-
     </div>
 
   `;
@@ -2950,9 +2823,9 @@ function clearSelection(){
 }
 
 
-/* ========================================
+/* ===============================
    イベント
-======================================== */
+=============================== */
 
 searchButton.addEventListener(
   "click",
@@ -3042,6 +2915,12 @@ qtyInput.addEventListener(
 clearButton.addEventListener(
   "click",
   clearSelection
+);
+
+
+resetOwnedButton.addEventListener(
+  "click",
+  resetAllOwned
 );
 
 })();
